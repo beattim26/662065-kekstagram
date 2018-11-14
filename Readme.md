@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Артём Шумейко](https://up.htmlacademy.ru/javascript/16/user/662065).
-* Наставник: `Неизвестно`.
+* Наставник: [Александр Бренчев](https://up.htmlacademy.ru/javascript/16/user/59895).
 
 ---
 

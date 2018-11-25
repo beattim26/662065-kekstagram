@@ -59,11 +59,11 @@ var getPropertyPicture = function (picture) {
   bigPicture.querySelector('.comments-count').textContent = picture.comments.length;
   bigPicture.querySelector('.social__caption').textContent = picture.description;
 
-  for (var i = 0; i < commentAvatar.length; i++) {
+  for (i = 0; i < commentAvatar.length; i++) {
     commentAvatar[i].src = 'img/avatar-' + getRandomNumber(1, 6) + '.svg';
   }
 
-  for (var i = 0; i < commentText.length; i++) {
+  for (i = 0; i < commentText.length; i++) {
     commentText[i].textContent = pictureData[i].comments;
   }
 

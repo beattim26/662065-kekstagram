@@ -12,34 +12,41 @@ var getRandomNumber = function (min, max) {
   return Math.floor(min + Math.random() * (max + 1 - min));
 };
 
-var getImagesUrl = function (min, max) {
-  var anyNumbers = [];
-  var randomNumber = 'photos/' + getRandomNumber(min, max) + '.jpg';
-  anyNumbers.push(randomNumber);
-  while (anyNumbers.length < max) {
-    randomNumber = 'photos/' + getRandomNumber(min, max) + '.jpg';
-    if (anyNumbers.indexOf(randomNumber) === -1) {
-      anyNumbers.push(randomNumber);
+var getImagesUrl = function (n) {
+  var anyUrls = [];
+  var randomUrl = 'photos/' + getRandomNumber(1, n) + '.jpg';
+  while (anyUrls.length < n) {
+    randomUrl = 'photos/' + getRandomNumber(1, n) + '.jpg';
+    if (anyUrls.indexOf(randomUrl) === -1) {
+      anyUrls.push(randomUrl);
     }
   }
 
-  return anyNumbers;
+  return anyUrls;
 
 };
 
-var imagesArray = getImagesUrl(1, 25);
+var imagesUrls = getImagesUrl(25);
 
 var getRandomFromArray = function (arr) {
   return arr[getRandomNumber(0, arr.length)];
+};
+
+var getRandomComment = function (n) {
+  if (n === 1) {
+    return getRandomFromArray(comments);
+  } else {
+    return getRandomFromArray(comments) + ' ' + getRandomFromArray(comments);
+  }
 };
 
 var getRandomPictures = function (n) {
   var randomData = [];
   for (var i = 0; i < n; i++) {
     randomData.push({
-      url: imagesArray[i],
+      url: imagesUrls[i],
       likes: getRandomNumber(15, 200),
-      comments: getRandomFromArray(comments),
+      comments: getRandomComment(getRandomNumber(0, 1)),
       description: getRandomFromArray(description)
     });
   }
@@ -66,20 +73,24 @@ for (var i = 0; i < pictureData.length; i++) {
 
 similarListElement.appendChild(fragment);
 
-bigPicture.classList.remove('hidden');
+var showPhoto = function () {
+  bigPicture.classList.remove('hidden');
 
-bigPicture.querySelector('.big-picture__img').firstElementChild.src = pictureData[0].url;
-bigPicture.querySelector('.likes-count').textContent = pictureData[0].likes;
-bigPicture.querySelector('.comments-count').textContent = pictureData[0].comments.length;
-bigPicture.querySelector('.social__caption').textContent = pictureData[0].description;
+  bigPicture.querySelector('.big-picture__img').firstElementChild.src = pictureData[0].url;
+  bigPicture.querySelector('.likes-count').textContent = pictureData[0].likes;
+  bigPicture.querySelector('.comments-count').textContent = pictureData[0].comments.length;
+  bigPicture.querySelector('.social__caption').textContent = pictureData[0].description;
 
-for (i = 0; i < commentAvatar.length; i++) {
-  commentAvatar[i].src = 'img/avatar-' + getRandomNumber(1, 6) + '.svg';
-}
+  for (i = 0; i < commentAvatar.length; i++) {
+    commentAvatar[i].src = 'img/avatar-' + getRandomNumber(1, 6) + '.svg';
+  }
 
-for (i = 0; i < commentText.length; i++) {
-  commentText[i].textContent = pictureData[i].comments;
-}
+  for (i = 0; i < commentText.length; i++) {
+    commentText[i].textContent = pictureData[i].comments;
+  }
+};
+
+showPhoto();
 
 bigPicture.querySelector('.social__comment-count').classList.add('visually-hidden');
 bigPicture.querySelector('.comments-loader').classList.add('visually-hidden');

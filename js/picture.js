@@ -35,7 +35,7 @@ var getRandomMessage = function (n) {
   if (n === 1) {
     return getRandomFromArray(comments);
   }
-    return getRandomFromArray(comments) + ' ' + getRandomFromArray(comments);
+  return getRandomFromArray(comments) + ' ' + getRandomFromArray(comments);
 };
 
 var getRandomComments = function (n) {

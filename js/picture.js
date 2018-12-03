@@ -1,10 +1,24 @@
 'use strict';
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
 var similarListElement = document.querySelector('.pictures');
 var similarPictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 var bigPicture = document.querySelector('.big-picture');
 var socialCommentsElement = bigPicture.querySelector('.social__comments');
 var socialCommentsTemplate = document.getElementById('social-comment').content.querySelector('.social__comment');
 var fragment = document.createDocumentFragment();
+var uploadButton = document.getElementById('upload-file');
+var uploadPopup = document.querySelector('.img-upload__overlay');
+var closeButtonUpload = document.getElementById('upload-cancel');
+var closeButtonPhoto = bigPicture.querySelector('.big-picture__cancel');
+var scaleValue = uploadPopup.querySelector('.scale__control--value');
+var scaleSmaller = uploadPopup.querySelector('.scale__control--smaller');
+var scaleBigger = uploadPopup.querySelector('.scale__control--bigger');
+var imagePreview = uploadPopup.querySelector('.img-upload__preview');
+var effectsList = uploadPopup.querySelector('.effects__list');
+var effectLevel = uploadPopup.querySelector('.img-upload__effect-level');
+var effectPin = uploadPopup.querySelector('.effect-level__pin');
+var effectValue = uploadPopup.querySelector('.effect-level__value');
 var comments = ['Всё отлично!', 'В целом всё неплохо. Но не всё.', 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.', 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.', 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
 var descriptions = ['Тестим новую камеру!', 'Затусили с друзьями на море', 'Как же круто тут кормят', 'Отдыхаем...', 'Цените каждое мгновенье. Цените тех, кто рядом с вами и отгоняйте все сомненья. Не обижайте всех словами......', 'Вот это тачка!'];
 var names = ['Артем', 'Петр', 'Василий', 'Иван', 'Генадий', 'Виктория', 'Елена', 'Мария'];
@@ -81,17 +95,6 @@ for (var i = 0; i < pictureData.length; i++) {
 
 similarListElement.appendChild(fragment);
 
-var showPhoto = function (picture) {
-  bigPicture.classList.remove('hidden');
-
-  bigPicture.querySelector('.big-picture__img').firstElementChild.src = picture.url;
-  bigPicture.querySelector('.likes-count').textContent = picture.likes;
-  bigPicture.querySelector('.comments-count').textContent = picture.comments.length;
-  bigPicture.querySelector('.social__caption').textContent = picture.description;
-};
-
-showPhoto(pictureData[0]);
-
 var renderComments = function (comment) {
   var commentEllement = socialCommentsTemplate.cloneNode(true);
 
@@ -109,3 +112,143 @@ socialCommentsElement.appendChild(fragment);
 
 bigPicture.querySelector('.social__comment-count').classList.add('visually-hidden');
 bigPicture.querySelector('.comments-loader').classList.add('visually-hidden');
+
+var onUploadEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closeEffect();
+  }
+};
+
+var onPhotoEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closePhoto();
+  }
+};
+
+var openEffect = function () {
+  uploadPopup.classList.remove('hidden');
+  document.addEventListener('keydown', onUploadEscPress);
+};
+
+var closeEffect = function () {
+  uploadPopup.classList.add('hidden');
+  document.removeEventListener('keydown', onUploadEscPress);
+  uploadButton.value = '';
+};
+
+var showPhoto = function (picture) {
+  bigPicture.classList.remove('hidden');
+
+  bigPicture.querySelector('.big-picture__img').firstElementChild.src = picture.url;
+  bigPicture.querySelector('.likes-count').textContent = picture.likes;
+  bigPicture.querySelector('.comments-count').textContent = picture.comments.length;
+  bigPicture.querySelector('.social__caption').textContent = picture.description;
+
+  document.addEventListener('keydown', onPhotoEscPress);
+};
+
+var closePhoto = function () {
+  bigPicture.classList.add('hidden');
+  document.removeEventListener('keydown', onPhotoEscPress);
+};
+
+uploadButton.addEventListener('change', function () {
+  openEffect();
+});
+
+closeButtonUpload.addEventListener('click', function () {
+  closeEffect();
+});
+
+similarListElement.addEventListener('click', function(evt) {
+  if (event.target.className === 'picture__img') {
+    showPhoto(pictureData[0]);
+  }
+});
+
+closeButtonPhoto.addEventListener('click', function(evt) {
+  closePhoto();
+});
+
+var getEffect = function () {
+  effectLevel.classList.remove('hidden');
+
+  imagePreview.firstElementChild.className = '';
+  imagePreview.firstElementChild.classList.add('effects__preview--' + event.target.value);
+
+  if (event.target.value === 'none' || event.target.tagName === 'UL') {
+    imagePreview.firstElementChild.style.filter = null;
+    effectLevel.classList.add('hidden');
+  } else if (imagePreview.firstElementChild.className === 'effects__preview--chrome') {
+    imagePreview.firstElementChild.style.filter = 'grayscale(1)';
+  } else if (imagePreview.firstElementChild.className === 'effects__preview--sepia') {
+    imagePreview.firstElementChild.style.filter = 'sepia(1)';
+  } else if (imagePreview.firstElementChild.className === 'effects__preview--marvin') {
+    imagePreview.firstElementChild.style.filter = 'invert(100%)';
+  } else if (imagePreview.firstElementChild.className === 'effects__preview--phobos') {
+    imagePreview.firstElementChild.style.filter = 'blur(5px)';
+  } else if (imagePreview.firstElementChild.className === 'effects__preview--heat') {
+    imagePreview.firstElementChild.style.filter = 'brightness(3)';
+  }
+};
+
+var getPinValue = function () {
+  if (imagePreview.firstElementChild.className === 'effects__preview--chrome') {
+    imagePreview.firstElementChild.style.filter = 'grayscale(0.' + (.1 *  effectValue.value) + ')';
+  } else if (imagePreview.firstElementChild.className === 'effects__preview--sepia') {
+    imagePreview.firstElementChild.style.filter = 'sepia(0.' + (.1 *  effectValue.value) + ')';
+  } else if (imagePreview.firstElementChild.className === 'effects__preview--marvin') {
+    imagePreview.firstElementChild.style.filter = 'invert(' + effectValue.value + '%)';
+  } else if (imagePreview.firstElementChild.className === 'effects__preview--phobos') {
+    imagePreview.firstElementChild.style.filter = 'blur(' + (0.05 *  effectValue.value) + 'px)';
+  } else if (imagePreview.firstElementChild.className === 'effects__preview--heat') {
+    imagePreview.firstElementChild.style.filter = 'brightness(' + (0.03 *  effectValue.value) + ')';
+  }
+};
+
+scaleBigger.addEventListener('click', function () {
+  if (scaleValue.value === '25%') {
+    scaleValue.value = '50%';
+    imagePreview.firstElementChild.style = 'transform: scale(0.5)';
+  } else if (scaleValue.value === '50%') {
+    scaleValue.value = '75%';
+    imagePreview.firstElementChild.style = 'transform: scale(0.75)';
+  } else if (scaleValue.value === '75%') {
+    scaleValue.value = '100%';
+    imagePreview.firstElementChild.style = 'transform: scale(1.0)';
+  }
+});
+
+scaleSmaller.addEventListener('click', function () {
+  if (scaleValue.value === '100%') {
+    scaleValue.value = '75%';
+    imagePreview.firstElementChild.style = 'transform: scale(0.75)';
+  } else if (scaleValue.value === '75%') {
+    scaleValue.value = '50%';
+    imagePreview.firstElementChild.style = 'transform: scale(0.5)';
+  } else if (scaleValue.value === '50%') {
+    scaleValue.value = '25%';
+    imagePreview.firstElementChild.style = 'transform: scale(0.25)';
+  }
+});
+
+effectsList.addEventListener('click', function(evt) {
+  getEffect();
+});
+
+effectsList.addEventListener('keydown', function(evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    getEffect();
+  }
+});
+
+effectPin.addEventListener('mouseup', function () {
+  getPinValue();
+});
+
+effectPin.addEventListener('keydown', function(evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    getPinValue();
+  }
+});
+

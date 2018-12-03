@@ -160,13 +160,13 @@ closeButtonUpload.addEventListener('click', function () {
   closeEffect();
 });
 
-similarListElement.addEventListener('click', function(evt) {
-  if (event.target.className === 'picture__img') {
+similarListElement.addEventListener('click', function (evt) {
+  if (evt.target.className === 'picture__img') {
     showPhoto(pictureData[0]);
   }
 });
 
-closeButtonPhoto.addEventListener('click', function(evt) {
+closeButtonPhoto.addEventListener('click', function () {
   closePhoto();
 });
 
@@ -194,15 +194,15 @@ var getEffect = function () {
 
 var getPinValue = function () {
   if (imagePreview.firstElementChild.className === 'effects__preview--chrome') {
-    imagePreview.firstElementChild.style.filter = 'grayscale(0.' + (.1 *  effectValue.value) + ')';
+    imagePreview.firstElementChild.style.filter = 'grayscale(0.' + (0.1 * effectValue.value) + ')';
   } else if (imagePreview.firstElementChild.className === 'effects__preview--sepia') {
-    imagePreview.firstElementChild.style.filter = 'sepia(0.' + (.1 *  effectValue.value) + ')';
+    imagePreview.firstElementChild.style.filter = 'sepia(0.' + (0.1 * effectValue.value) + ')';
   } else if (imagePreview.firstElementChild.className === 'effects__preview--marvin') {
     imagePreview.firstElementChild.style.filter = 'invert(' + effectValue.value + '%)';
   } else if (imagePreview.firstElementChild.className === 'effects__preview--phobos') {
-    imagePreview.firstElementChild.style.filter = 'blur(' + (0.05 *  effectValue.value) + 'px)';
+    imagePreview.firstElementChild.style.filter = 'blur(' + (0.05 * effectValue.value) + 'px)';
   } else if (imagePreview.firstElementChild.className === 'effects__preview--heat') {
-    imagePreview.firstElementChild.style.filter = 'brightness(' + (0.03 *  effectValue.value) + ')';
+    imagePreview.firstElementChild.style.filter = 'brightness(' + (0.03 * effectValue.value) + ')';
   }
 };
 
@@ -232,11 +232,11 @@ scaleSmaller.addEventListener('click', function () {
   }
 });
 
-effectsList.addEventListener('click', function(evt) {
+effectsList.addEventListener('click', function () {
   getEffect();
 });
 
-effectsList.addEventListener('keydown', function(evt) {
+effectsList.addEventListener('keydown', function (evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
     getEffect();
   }
@@ -246,7 +246,7 @@ effectPin.addEventListener('mouseup', function () {
   getPinValue();
 });
 
-effectPin.addEventListener('keydown', function(evt) {
+effectPin.addEventListener('keydown', function (evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
     getPinValue();
   }

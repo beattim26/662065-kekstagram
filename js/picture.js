@@ -43,7 +43,7 @@ var getImagesUrls = function (n) {
 var imagesUrls = getImagesUrls(25);
 
 var getRandomFromArray = function (arr) {
-  return arr[getRandomNumber(0, arr.length)];
+  return arr[getRandomNumber(0, arr.length - 1)];
 };
 
 var getRandomMessage = function (n) {
@@ -80,11 +80,13 @@ var getRandomPictures = function (n) {
 
 var renderPicture = function (picture) {
   var pictureElement = similarPictureTemplate.cloneNode(true);
+  var commentsAmount = getRandomNumber(0, 5);
 
   pictureElement.querySelector('.picture__img').src = picture.url;
   pictureElement.querySelector('.picture__img').dataset.picture = i;
+  pictureElement.querySelector('.picture__img').dataset.comments = commentsAmount;
   pictureElement.querySelector('.picture__likes').textContent = picture.likes;
-  pictureElement.querySelector('.picture__comments').textContent = getRandomNumber(3, 15);
+  pictureElement.querySelector('.picture__comments').textContent = commentsAmount;
 
   return pictureElement;
 };
@@ -105,12 +107,6 @@ var renderComments = function (comment) {
 
   return commentEllement;
 };
-
-for (i = 0; i < getRandomNumber(0, 5); i++) {
-  fragment.appendChild(renderComments(pictures[i].comments[i]));
-}
-
-socialCommentsElement.appendChild(fragment);
 
 bigPicture.querySelector('.social__comment-count').classList.add('visually-hidden');
 bigPicture.querySelector('.comments-loader').classList.add('visually-hidden');
@@ -147,11 +143,22 @@ var showPhoto = function (picture) {
   bigPicture.querySelector('.social__caption').textContent = picture.description;
 
   document.addEventListener('keydown', onPhotoEscPress);
+
+  for (i = 0; i < event.target.dataset.comments; i++) {
+    fragment.appendChild(renderComments(pictures[event.target.dataset.picture].comments[i]));
+  }
+
+  socialCommentsElement.appendChild(fragment);
 };
 
 var closePhoto = function () {
+  var usersComments = bigPicture.querySelectorAll('.social__comment');
   bigPicture.classList.add('hidden');
   document.removeEventListener('keydown', onPhotoEscPress);
+
+  for (i = 0; i < usersComments.length; i++) {
+    socialCommentsElement.removeChild(usersComments[i]);
+  }
 };
 
 uploadButton.addEventListener('change', function () {

@@ -80,13 +80,12 @@ var getRandomPictures = function (n) {
 
 var renderPicture = function (picture) {
   var pictureElement = similarPictureTemplate.cloneNode(true);
-  var commentsAmount = getRandomNumber(0, 5);
 
   pictureElement.querySelector('.picture__img').src = picture.url;
   pictureElement.querySelector('.picture__img').dataset.picture = i;
-  pictureElement.querySelector('.picture__img').dataset.comments = commentsAmount;
+  pictureElement.querySelector('.picture__img').dataset.comments = getRandomNumber(0, 5);
   pictureElement.querySelector('.picture__likes').textContent = picture.likes;
-  pictureElement.querySelector('.picture__comments').textContent = commentsAmount;
+  pictureElement.querySelector('.picture__comments').textContent = getRandomNumber(3, 15);
 
   return pictureElement;
 };

@@ -208,7 +208,7 @@ var getEffect = function () {
     imagePreview.style.filter = null;
     imagePreview.style.filter = filterValue.effectsValue;
     activeFiler = effectsValue;
-  };
+  }
 };
 
 var getFilterStyle = function (name, value) {
@@ -222,6 +222,8 @@ var getFilterStyle = function (name, value) {
     return 'blur(' + (0.05 * value) + 'px)';
   } else if (name === FILTER_HEAT) {
     return 'brightness(' + (0.03 * value) + ')';
+  } else {
+    return value;
   }
 };
 
@@ -231,11 +233,11 @@ var applyFilter = function () {
   } else if (activeFiler === FILTER_SEPIA) {
     imagePreview.style.filter = getFilterStyle(FILTER_SEPIA, effectValue.value);
   } else if (activeFiler === FILTER_MARVIN) {
-    imagePreview.style.filter =  getFilterStyle(FILTER_MARVIN, effectValue.value);
+    imagePreview.style.filter = getFilterStyle(FILTER_MARVIN, effectValue.value);
   } else if (activeFiler === FILTER_PHOBOS) {
-    imagePreview.style.filter =  getFilterStyle(FILTER_PHOBOS, effectValue.value);;
+    imagePreview.style.filter = getFilterStyle(FILTER_PHOBOS, effectValue.value);
   } else if (activeFiler === FILTER_HEAT) {
-    imagePreview.style.filter = getFilterStyle(FILTER_HEAT, effectValue.value);;
+    imagePreview.style.filter = getFilterStyle(FILTER_HEAT, effectValue.value);
   }
 };
 

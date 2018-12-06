@@ -2,6 +2,15 @@
 var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
 var STEP_VALUE = 25;
+var MAX_VALUE = '100%';
+var MIN_VALUE = '25%';
+var FILTER_NONE = 'none';
+var FILTER_CHROME = 'chrome';
+var FILTER_SEPIA = 'sepia';
+var FILTER_MARVIN = 'marvin';
+var FILTER_PHOBOS = 'phobos';
+var FILTER_HEAT = 'heat';
+var activeFiler = 'none';
 var similarListElement = document.querySelector('.pictures');
 var similarPictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 var bigPicture = document.querySelector('.big-picture');
@@ -23,6 +32,13 @@ var effectValue = uploadPopup.querySelector('.effect-level__value');
 var comments = ['Всё отлично!', 'В целом всё неплохо. Но не всё.', 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.', 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.', 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
 var descriptions = ['Тестим новую камеру!', 'Затусили с друзьями на море', 'Как же круто тут кормят', 'Отдыхаем...', 'Цените каждое мгновенье. Цените тех, кто рядом с вами и отгоняйте все сомненья. Не обижайте всех словами......', 'Вот это тачка!'];
 var names = ['Артем', 'Петр', 'Василий', 'Иван', 'Генадий', 'Виктория', 'Елена', 'Мария'];
+var filterValue = {
+  FILTER_CHROME: 'grayscale(1)',
+  FILTER_SEPIA: 'sepia(1)',
+  FILTER_MARVIN: 'invert(100%)',
+  FILTER_PHOBOS: 'blur(5px)',
+  FILTER_HEAT: 'brightness(3)'
+};
 
 var getRandomNumber = function (min, max) {
   return Math.floor(min + Math.random() * (max + 1 - min));
@@ -71,7 +87,7 @@ var getRandomPictures = function (n) {
     randomData.push({
       url: imagesUrls[i],
       likes: getRandomNumber(15, 200),
-      comments: getRandomComments(5),
+      comments: getRandomComments(getRandomNumber(0, 5)),
       description: getRandomFromArray(descriptions)
     });
   }
@@ -80,10 +96,10 @@ var getRandomPictures = function (n) {
 
 var renderPicture = function (picture) {
   var pictureElement = similarPictureTemplate.cloneNode(true);
+  var pictureIndex = i;
 
   pictureElement.querySelector('.picture__img').src = picture.url;
-  pictureElement.querySelector('.picture__img').dataset.picture = i;
-  pictureElement.querySelector('.picture__img').dataset.comments = getRandomNumber(0, 5);
+  pictureElement.querySelector('.picture__img').dataset.picture = pictureIndex;
   pictureElement.querySelector('.picture__likes').textContent = picture.likes;
   pictureElement.querySelector('.picture__comments').textContent = getRandomNumber(3, 15);
 
@@ -143,7 +159,7 @@ var showPhoto = function (picture) {
 
   document.addEventListener('keydown', onPhotoEscPress);
 
-  for (i = 0; i < event.target.dataset.comments; i++) {
+  for (i = 0; i < picture.comments.length; i++) {
     fragment.appendChild(renderComments(pictures[event.target.dataset.picture].comments[i]));
   }
 
@@ -179,55 +195,65 @@ closeButtonPhoto.addEventListener('click', function () {
 });
 
 var getEffect = function () {
+  var effectsValue = event.target.value;
   effectLevel.classList.remove('hidden');
 
   imagePreview.className = '';
-  imagePreview.classList.add('effects__preview--' + event.target.value);
+  imagePreview.classList.add('effects__preview--' + effectsValue);
 
-  if (event.target.value === 'none') {
+  if (effectsValue === FILTER_NONE) {
     imagePreview.style.filter = null;
     effectLevel.classList.add('hidden');
-  } else if (event.target.value === 'chrome') {
-    imagePreview.style.filter = 'grayscale(1)';
-  } else if (event.target.value === 'sepia') {
-    imagePreview.style.filter = 'sepia(1)';
-  } else if (event.target.value === 'marvin') {
-    imagePreview.style.filter = 'invert(100%)';
-  } else if (event.target.value === 'phobos') {
-    imagePreview.style.filter = 'blur(5px)';
-  } else if (event.target.value === 'heat') {
-    imagePreview.style.filter = 'brightness(3)';
+  } else {
+    imagePreview.style.filter = null;
+    imagePreview.style.filter = filterValue.effectsValue;
+    activeFiler = effectsValue;
+  };
+};
+
+var getFilterStyle = function (name, value) {
+  if (name === FILTER_CHROME) {
+    return 'grayscale(0.' + (0.1 * value) + ')';
+  } else if (name === FILTER_SEPIA) {
+    return 'sepia(0.' + (0.1 * value) + ')';
+  } else if (name === FILTER_MARVIN) {
+    return 'invert(' + value + '%)';
+  } else if (name === FILTER_PHOBOS) {
+    return 'blur(' + (0.05 * value) + 'px)';
+  } else if (name === FILTER_HEAT) {
+    return 'brightness(' + (0.03 * value) + ')';
   }
 };
 
 var applyFilter = function () {
-  var filterName = imagePreview.className;
-  if (filterName.indexOf('chrome') !== -1) {
-    imagePreview.style.filter = 'grayscale(0.' + (0.1 * effectValue.value) + ')';
-  } else if (filterName.indexOf('sepia') !== -1) {
-    imagePreview.style.filter = 'sepia(0.' + (0.1 * effectValue.value) + ')';
-  } else if (filterName.indexOf('marvin') !== -1) {
-    imagePreview.style.filter = 'invert(' + effectValue.value + '%)';
-  } else if (filterName.indexOf('phobos') !== -1) {
-    imagePreview.style.filter = 'blur(' + (0.05 * effectValue.value) + 'px)';
-  } else if (filterName.indexOf('heat') !== -1) {
-    imagePreview.style.filter = 'brightness(' + (0.03 * effectValue.value) + ')';
+  if (activeFiler === FILTER_CHROME) {
+    imagePreview.style.filter = getFilterStyle(FILTER_CHROME, effectValue.value);
+  } else if (activeFiler === FILTER_SEPIA) {
+    imagePreview.style.filter = getFilterStyle(FILTER_SEPIA, effectValue.value);
+  } else if (activeFiler === FILTER_MARVIN) {
+    imagePreview.style.filter =  getFilterStyle(FILTER_MARVIN, effectValue.value);
+  } else if (activeFiler === FILTER_PHOBOS) {
+    imagePreview.style.filter =  getFilterStyle(FILTER_PHOBOS, effectValue.value);;
+  } else if (activeFiler === FILTER_HEAT) {
+    imagePreview.style.filter = getFilterStyle(FILTER_HEAT, effectValue.value);;
   }
 };
 
 scaleBigger.addEventListener('click', function () {
-  if (scaleValue.value !== '100%') {
+  if (scaleValue.value !== MAX_VALUE) {
     var currentValue = parseInt(scaleValue.value, 10);
     scaleValue.value = currentValue + STEP_VALUE + '%';
-    imagePreview.style = 'transform: scale(' + parseInt(scaleValue.value, 10) / 100 + ')';
+    currentValue += STEP_VALUE;
+    imagePreview.style.transform = 'scale(' + currentValue / 100 + ')';
   }
 });
 
 scaleSmaller.addEventListener('click', function () {
-  if (scaleValue.value !== '25%') {
+  if (scaleValue.value !== MIN_VALUE) {
     var currentValue = parseInt(scaleValue.value, 10);
     scaleValue.value = currentValue - STEP_VALUE + '%';
-    imagePreview.style = 'transform: scale(' + parseInt(scaleValue.value, 10) / 100 + ')';
+    currentValue -= STEP_VALUE;
+    imagePreview.style.transform = 'scale(' + currentValue / 100 + ')';
   }
 });
 

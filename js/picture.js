@@ -202,7 +202,7 @@ var getEffect = function (target) {
   imagePreview.className = '';
   imagePreview.classList.add(effectsValue);
 
-  if (effectsValue === FILTER_NONE) {
+  if (effectsValue.indexOf(FILTER_NONE) !== -1) {
     imagePreview.style.filter = null;
     effectLevel.classList.add('hidden');
   } else {

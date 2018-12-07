@@ -29,6 +29,7 @@ var effectsList = uploadPopup.querySelector('.img-upload__effects');
 var effectLevel = uploadPopup.querySelector('.img-upload__effect-level');
 var effectPin = uploadPopup.querySelector('.effect-level__pin');
 var effectValue = uploadPopup.querySelector('.effect-level__value');
+var effectsLabel = uploadPopup.querySelectorAll('.effects__label');
 var comments = ['Всё отлично!', 'В целом всё неплохо. Но не всё.', 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.', 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.', 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
 var descriptions = ['Тестим новую камеру!', 'Затусили с друзьями на море', 'Как же круто тут кормят', 'Отдыхаем...', 'Цените каждое мгновенье. Цените тех, кто рядом с вами и отгоняйте все сомненья. Не обижайте всех словами......', 'Вот это тачка!'];
 var names = ['Артем', 'Петр', 'Василий', 'Иван', 'Генадий', 'Виктория', 'Елена', 'Мария'];
@@ -194,12 +195,12 @@ closeButtonPhoto.addEventListener('click', function () {
   closePhoto();
 });
 
-var getEffect = function () {
-  var effectsValue = event.target.value;
+var getEffect = function (target) {
+  var effectsValue = target;
   effectLevel.classList.remove('hidden');
 
   imagePreview.className = '';
-  imagePreview.classList.add('effects__preview--' + effectsValue);
+  imagePreview.classList.add(effectsValue);
 
   if (effectsValue === FILTER_NONE) {
     imagePreview.style.filter = null;
@@ -228,15 +229,15 @@ var getFilterStyle = function (name, value) {
 };
 
 var applyFilter = function () {
-  if (activeFiler === FILTER_CHROME) {
+  if (activeFiler.indexOf(FILTER_CHROME) !== -1) {
     imagePreview.style.filter = getFilterStyle(FILTER_CHROME, effectValue.value);
-  } else if (activeFiler === FILTER_SEPIA) {
+  } else if (activeFiler.indexOf(FILTER_SEPIA) !== -1) {
     imagePreview.style.filter = getFilterStyle(FILTER_SEPIA, effectValue.value);
-  } else if (activeFiler === FILTER_MARVIN) {
+  } else if (activeFiler.indexOf(FILTER_MARVIN) !== -1) {
     imagePreview.style.filter = getFilterStyle(FILTER_MARVIN, effectValue.value);
-  } else if (activeFiler === FILTER_PHOBOS) {
+  } else if (activeFiler.indexOf(FILTER_PHOBOS) !== -1) {
     imagePreview.style.filter = getFilterStyle(FILTER_PHOBOS, effectValue.value);
-  } else if (activeFiler === FILTER_HEAT) {
+  } else if (activeFiler.indexOf(FILTER_HEAT) !== -1) {
     imagePreview.style.filter = getFilterStyle(FILTER_HEAT, effectValue.value);
   }
 };
@@ -260,8 +261,16 @@ scaleSmaller.addEventListener('click', function () {
 });
 
 effectsList.addEventListener('change', function () {
-  getEffect();
+  getEffect('effects__preview--' + event.target.value);
 });
+
+for (i = 0; i < effectsLabel.length; i++) {
+  effectsLabel[i].addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ENTER_KEYCODE) {
+      getEffect(event.target.classList[1]);
+    }
+  });
+}
 
 effectPin.addEventListener('mouseup', function () {
   applyFilter();

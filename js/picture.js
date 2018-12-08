@@ -4,13 +4,7 @@ var ENTER_KEYCODE = 13;
 var STEP_VALUE = 25;
 var MAX_VALUE = '100%';
 var MIN_VALUE = '25%';
-var FILTER_NONE = 'none';
-var FILTER_CHROME = 'chrome';
-var FILTER_SEPIA = 'sepia';
-var FILTER_MARVIN = 'marvin';
-var FILTER_PHOBOS = 'phobos';
-var FILTER_HEAT = 'heat';
-var activeFiler = 'none';
+var activeFilter;
 var similarListElement = document.querySelector('.pictures');
 var similarPictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 var bigPicture = document.querySelector('.big-picture');
@@ -33,6 +27,14 @@ var effectsLabel = uploadPopup.querySelectorAll('.effects__label');
 var comments = ['Всё отлично!', 'В целом всё неплохо. Но не всё.', 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.', 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.', 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
 var descriptions = ['Тестим новую камеру!', 'Затусили с друзьями на море', 'Как же круто тут кормят', 'Отдыхаем...', 'Цените каждое мгновенье. Цените тех, кто рядом с вами и отгоняйте все сомненья. Не обижайте всех словами......', 'Вот это тачка!'];
 var names = ['Артем', 'Петр', 'Василий', 'Иван', 'Генадий', 'Виктория', 'Елена', 'Мария'];
+var filter = {
+  NONE: 'none',
+  CHROME: 'chrome',
+  SEPIA: 'sepia',
+  MARVIN: 'marvin',
+  PHOBOS: 'phobos',
+  HEAT: 'heat'
+};
 var filterValue = {
   FILTER_CHROME: 'grayscale(1)',
   FILTER_SEPIA: 'sepia(1)',
@@ -95,12 +97,11 @@ var getRandomPictures = function (n) {
   return randomData;
 };
 
-var renderPicture = function (picture) {
+var renderPicture = function (picture, index) {
   var pictureElement = similarPictureTemplate.cloneNode(true);
-  var pictureIndex = i;
 
   pictureElement.querySelector('.picture__img').src = picture.url;
-  pictureElement.querySelector('.picture__img').dataset.picture = pictureIndex;
+  pictureElement.querySelector('.picture__img').dataset.picture = index;
   pictureElement.querySelector('.picture__likes').textContent = picture.likes;
   pictureElement.querySelector('.picture__comments').textContent = getRandomNumber(3, 15);
 
@@ -110,12 +111,12 @@ var renderPicture = function (picture) {
 var pictures = getRandomPictures(25);
 
 for (var i = 0; i < pictures.length; i++) {
-  fragment.appendChild(renderPicture(pictures[i]));
+  fragment.appendChild(renderPicture(pictures[i], i));
 }
 
 similarListElement.appendChild(fragment);
 
-var renderComments = function (comment) {
+var renderComment = function (comment) {
   var commentEllement = socialCommentsTemplate.cloneNode(true);
 
   commentEllement.querySelector('.social__picture').src = comment.avatar;
@@ -161,7 +162,7 @@ var showPhoto = function (picture) {
   document.addEventListener('keydown', onPhotoEscPress);
 
   for (i = 0; i < picture.comments.length; i++) {
-    fragment.appendChild(renderComments(pictures[event.target.dataset.picture].comments[i]));
+    fragment.appendChild(renderComment(pictures[event.target.dataset.picture].comments[i]));
   }
 
   socialCommentsElement.appendChild(fragment);
@@ -195,50 +196,57 @@ closeButtonPhoto.addEventListener('click', function () {
   closePhoto();
 });
 
-var getEffect = function (target) {
-  var effectsValue = target;
+var changeFilter = function (filterName) {
+  var effectsValue = 'effects__preview--' + filterName;
   effectLevel.classList.remove('hidden');
 
   imagePreview.className = '';
   imagePreview.classList.add(effectsValue);
+  imagePreview.style.filter = null;
 
-  if (effectsValue.indexOf(FILTER_NONE) !== -1) {
-    imagePreview.style.filter = null;
+  if (effectsValue.indexOf(filter.NONE) !== -1) {
     effectLevel.classList.add('hidden');
+    activeFilter = 'none';
   } else {
-    imagePreview.style.filter = null;
     imagePreview.style.filter = filterValue.effectsValue;
-    activeFiler = effectsValue;
+    activeFilter = filterName;
   }
 };
 
 var getFilterStyle = function (name, value) {
-  if (name === FILTER_CHROME) {
-    return 'grayscale(0.' + (0.1 * value) + ')';
-  } else if (name === FILTER_SEPIA) {
-    return 'sepia(0.' + (0.1 * value) + ')';
-  } else if (name === FILTER_MARVIN) {
-    return 'invert(' + value + '%)';
-  } else if (name === FILTER_PHOBOS) {
-    return 'blur(' + (0.05 * value) + 'px)';
-  } else if (name === FILTER_HEAT) {
-    return 'brightness(' + (0.03 * value) + ')';
-  } else {
-    return value;
+  switch (name) {
+    case filter.CHROME:
+      return 'grayscale(0.' + (0.1 * value) + ')';
+    case filter.SEPIA:
+      return 'sepia(0.' + (0.1 * value) + ')';
+    case filter.MARVIN:
+      return 'invert(' + value + '%)';
+    case filter.PHOBOS:
+      return 'blur(' + (0.05 * value) + 'px)';
+    case filter.HEAT:
+      return 'brightness(' + (0.03 * value) + ')';
+    default:
+      return value;
   }
 };
 
 var applyFilter = function () {
-  if (activeFiler.indexOf(FILTER_CHROME) !== -1) {
-    imagePreview.style.filter = getFilterStyle(FILTER_CHROME, effectValue.value);
-  } else if (activeFiler.indexOf(FILTER_SEPIA) !== -1) {
-    imagePreview.style.filter = getFilterStyle(FILTER_SEPIA, effectValue.value);
-  } else if (activeFiler.indexOf(FILTER_MARVIN) !== -1) {
-    imagePreview.style.filter = getFilterStyle(FILTER_MARVIN, effectValue.value);
-  } else if (activeFiler.indexOf(FILTER_PHOBOS) !== -1) {
-    imagePreview.style.filter = getFilterStyle(FILTER_PHOBOS, effectValue.value);
-  } else if (activeFiler.indexOf(FILTER_HEAT) !== -1) {
-    imagePreview.style.filter = getFilterStyle(FILTER_HEAT, effectValue.value);
+  switch (activeFilter) {
+    case filter.CHROME:
+      imagePreview.style.filter = getFilterStyle(filter.CHROME, effectValue.value);
+      break;
+    case filter.SEPIA:
+      imagePreview.style.filter = getFilterStyle(filter.SEPIA, effectValue.value);
+      break;
+    case filter.MARVIN:
+      imagePreview.style.filter = getFilterStyle(filter.MARVIN, effectValue.value);
+      break;
+    case filter.PHOBOS:
+      imagePreview.style.filter = getFilterStyle(filter.PHOBOS, effectValue.value);
+      break;
+    case filter.HEAT:
+      imagePreview.style.filter = getFilterStyle(filter.HEAT, effectValue.value);
+      break;
   }
 };
 
@@ -260,14 +268,15 @@ scaleSmaller.addEventListener('click', function () {
   }
 });
 
-effectsList.addEventListener('change', function () {
-  getEffect('effects__preview--' + event.target.value);
+effectsList.addEventListener('change', function (evt) {
+  changeFilter(evt.target.value);
 });
 
 for (i = 0; i < effectsLabel.length; i++) {
   effectsLabel[i].addEventListener('keydown', function (evt) {
     if (evt.keyCode === ENTER_KEYCODE) {
-      getEffect(event.target.classList[1]);
+      var iventInput = document.getElementById(event.target.parentNode.htmlFor);
+      changeFilter(iventInput.value);
     }
   });
 }

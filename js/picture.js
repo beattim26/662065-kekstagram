@@ -27,20 +27,13 @@ var effectsLabel = uploadPopup.querySelectorAll('.effects__label');
 var comments = ['Всё отлично!', 'В целом всё неплохо. Но не всё.', 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.', 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.', 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
 var descriptions = ['Тестим новую камеру!', 'Затусили с друзьями на море', 'Как же круто тут кормят', 'Отдыхаем...', 'Цените каждое мгновенье. Цените тех, кто рядом с вами и отгоняйте все сомненья. Не обижайте всех словами......', 'Вот это тачка!'];
 var names = ['Артем', 'Петр', 'Василий', 'Иван', 'Генадий', 'Виктория', 'Елена', 'Мария'];
-var filter = {
+var Filter = {
   NONE: 'none',
   CHROME: 'chrome',
   SEPIA: 'sepia',
   MARVIN: 'marvin',
   PHOBOS: 'phobos',
   HEAT: 'heat'
-};
-var filterValue = {
-  FILTER_CHROME: 'grayscale(1)',
-  FILTER_SEPIA: 'sepia(1)',
-  FILTER_MARVIN: 'invert(100%)',
-  FILTER_PHOBOS: 'blur(5px)',
-  FILTER_HEAT: 'brightness(3)'
 };
 
 var getRandomNumber = function (min, max) {
@@ -204,26 +197,25 @@ var changeFilter = function (filterName) {
   imagePreview.classList.add(effectsValue);
   imagePreview.style.filter = null;
 
-  if (effectsValue.indexOf(filter.NONE) !== -1) {
+  if (filterName === Filter.NONE) {
     effectLevel.classList.add('hidden');
-    activeFilter = 'none';
+    activeFilter = Filter.NONE;
   } else {
-    imagePreview.style.filter = filterValue.effectsValue;
     activeFilter = filterName;
   }
 };
 
 var getFilterStyle = function (name, value) {
   switch (name) {
-    case filter.CHROME:
+    case Filter.CHROME:
       return 'grayscale(0.' + (0.1 * value) + ')';
-    case filter.SEPIA:
+    case Filter.SEPIA:
       return 'sepia(0.' + (0.1 * value) + ')';
-    case filter.MARVIN:
+    case Filter.MARVIN:
       return 'invert(' + value + '%)';
-    case filter.PHOBOS:
+    case Filter.PHOBOS:
       return 'blur(' + (0.05 * value) + 'px)';
-    case filter.HEAT:
+    case Filter.HEAT:
       return 'brightness(' + (0.03 * value) + ')';
     default:
       return value;
@@ -231,23 +223,7 @@ var getFilterStyle = function (name, value) {
 };
 
 var applyFilter = function () {
-  switch (activeFilter) {
-    case filter.CHROME:
-      imagePreview.style.filter = getFilterStyle(filter.CHROME, effectValue.value);
-      break;
-    case filter.SEPIA:
-      imagePreview.style.filter = getFilterStyle(filter.SEPIA, effectValue.value);
-      break;
-    case filter.MARVIN:
-      imagePreview.style.filter = getFilterStyle(filter.MARVIN, effectValue.value);
-      break;
-    case filter.PHOBOS:
-      imagePreview.style.filter = getFilterStyle(filter.PHOBOS, effectValue.value);
-      break;
-    case filter.HEAT:
-      imagePreview.style.filter = getFilterStyle(filter.HEAT, effectValue.value);
-      break;
-  }
+  imagePreview.style.filter = getFilterStyle(activeFilter, effectValue.value);
 };
 
 scaleBigger.addEventListener('click', function () {
@@ -275,8 +251,8 @@ effectsList.addEventListener('change', function (evt) {
 for (i = 0; i < effectsLabel.length; i++) {
   effectsLabel[i].addEventListener('keydown', function (evt) {
     if (evt.keyCode === ENTER_KEYCODE) {
-      var iventInput = document.getElementById(event.target.parentNode.htmlFor);
-      changeFilter(iventInput.value);
+      var eventInput = document.getElementById(event.target.parentNode.htmlFor);
+      changeFilter(eventInput.value);
     }
   });
 }

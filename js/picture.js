@@ -4,6 +4,8 @@ var ENTER_KEYCODE = 13;
 var STEP_VALUE = 25;
 var MAX_VALUE = '100%';
 var MIN_VALUE = '25%';
+var MAX_SYMBOLS = 20;
+var MAX_TAGS = 5;
 var activeFilter;
 var similarListElement = document.querySelector('.pictures');
 var similarPictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
@@ -24,6 +26,7 @@ var effectLevel = uploadPopup.querySelector('.img-upload__effect-level');
 var effectPin = uploadPopup.querySelector('.effect-level__pin');
 var effectValue = uploadPopup.querySelector('.effect-level__value');
 var effectsLabel = uploadPopup.querySelectorAll('.effects__label');
+var hashTag = uploadPopup.querySelector('.text__hashtags');
 var comments = ['Всё отлично!', 'В целом всё неплохо. Но не всё.', 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.', 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.', 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
 var descriptions = ['Тестим новую камеру!', 'Затусили с друзьями на море', 'Как же круто тут кормят', 'Отдыхаем...', 'Цените каждое мгновенье. Цените тех, кто рядом с вами и отгоняйте все сомненья. Не обижайте всех словами......', 'Вот это тачка!'];
 var names = ['Артем', 'Петр', 'Василий', 'Иван', 'Генадий', 'Виктория', 'Елена', 'Мария'];
@@ -267,3 +270,37 @@ effectPin.addEventListener('keydown', function (evt) {
   }
 });
 
+var setTagValidity = function () {
+  var tagsArray = hashTag.value.toLowerCase().split(' ');
+
+  for (i = 0; i < tagsArray.length; i++) {
+    if (tagsArray[i].indexOf('#') !== 0) {
+      hashTag.setCustomValidity('Начните ваш хэштег с символа "#"');
+    } else if (tagsArray[i].length === 1) {
+      hashTag.setCustomValidity('Ваш хэштег не может состоять только из одной решетки');
+    } else if (tagsArray[i].length > MAX_SYMBOLS) {
+      hashTag.setCustomValidity('Ваш хэштэг превышает максимальную длинну на ' + (tagsArray[i].length - MAX_SYMBOLS) + ' символов');
+    } else if (tagsArray.length > MAX_TAGS) {
+      hashTag.setCustomValidity('Нельзя указывать больше пяти хэштегов');
+    } else if (tagsArray[i].indexOf('#', 1) > 0) {
+      hashTag.setCustomValidity('Хэштэги должны разделяться пробелом');
+    } else if (tagsArray.indexOf(tagsArray[i], i + 1) > 0) {
+      hashTag.setCustomValidity('Хэштеги не должны повторяться');
+      break;
+    } else {
+      hashTag.setCustomValidity('');
+    }
+  }
+};
+
+hashTag.addEventListener('input', function () {
+  setTagValidity();
+});
+
+hashTag.onfocus = function () {
+  document.removeEventListener('keydown', onUploadEscPress);
+};
+
+hashTag.onblur = function () {
+  document.addEventListener('keydown', onUploadEscPress);
+};

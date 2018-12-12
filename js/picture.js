@@ -4,8 +4,10 @@ var ENTER_KEYCODE = 13;
 var STEP_VALUE = 25;
 var MAX_VALUE = '100%';
 var MIN_VALUE = '25%';
-var MAX_SYMBOLS = 20;
+var MAX_CHARACTERS = 20;
 var MAX_TAGS = 5;
+var MAX_SHIFT_X = 450;
+var PERCENT_PIN_POSITION = 4.5;
 var activeFilter;
 var similarListElement = document.querySelector('.pictures');
 var similarPictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
@@ -24,6 +26,7 @@ var imagePreview = uploadPopup.querySelector('.img-upload__preview-photo');
 var effectsList = uploadPopup.querySelector('.img-upload__effects');
 var effectLevel = uploadPopup.querySelector('.img-upload__effect-level');
 var effectPin = uploadPopup.querySelector('.effect-level__pin');
+var effectDepth = document.querySelector('.effect-level__depth');
 var effectValue = uploadPopup.querySelector('.effect-level__value');
 var effectsLabel = uploadPopup.querySelectorAll('.effects__label');
 var hashTag = uploadPopup.querySelector('.text__hashtags');
@@ -212,9 +215,9 @@ var changeFilter = function (filterName) {
 var getFilterStyle = function (name, value) {
   switch (name) {
     case Filter.CHROME:
-      return 'grayscale(0.' + (0.1 * value) + ')';
+      return 'grayscale(' + (0.01 * value) + ')';
     case Filter.SEPIA:
-      return 'sepia(0.' + (0.1 * value) + ')';
+      return 'sepia(' + (0.01 * value) + ')';
     case Filter.MARVIN:
       return 'invert(' + value + '%)';
     case Filter.PHOBOS:
@@ -277,8 +280,8 @@ var showTagError = function (hashTags) {
       return 'Начните ваш хэштег с символа "#"';
     } else if (hashTags[i].length === 1) {
       return 'Ваш хэштег не может состоять только из одной решетки';
-    } else if (hashTags[i].length > MAX_SYMBOLS) {
-      return 'Ваш хэштэг превышает максимальную длинну на ' + (hashTags[i].length - MAX_SYMBOLS) + ' символов';
+    } else if (hashTags[i].length > MAX_CHARACTERS) {
+      return 'Ваш хэштэг превышает максимальную длинну на ' + (hashTags[i].length - MAX_CHARACTERS) + ' символов';
     } else if (hashTags.length > MAX_TAGS) {
       return 'Нельзя указывать больше пяти хэштегов';
     } else if (hashTags[i].indexOf('#', 1) > 0) {
@@ -314,4 +317,56 @@ commentField.addEventListener('focus', function () {
 
 commentField.addEventListener('blur', function () {
   document.addEventListener('keydown', onUploadEscPress);
+});
+
+effectPin.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+
+  var startCoords = {
+    x: evt.clientX
+  };
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var shift = {
+      x: startCoords.x - moveEvt.clientX
+    };
+
+    startCoords = {
+      x: moveEvt.clientX
+    };
+
+    var positionPin = effectPin.offsetLeft - shift.x;
+
+    if (positionPin >= 0 && positionPin <= MAX_SHIFT_X) {
+      effectPin.style.left = positionPin + 'px';
+      effectDepth.style.width = (effectPin.offsetLeft / PERCENT_PIN_POSITION) + '%';
+      effectValue.value = effectPin.offsetLeft / PERCENT_PIN_POSITION;
+    }
+
+    applyFilter();
+  };
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+});
+
+effectsList.addEventListener('change', function (evt) {
+  changeFilter(evt.target.value);
+  effectPin.style.left = MAX_SHIFT_X + 'px';
+  effectDepth.style.width = '100%';
+});
+
+effectPin.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    applyFilter();
+  }
 });

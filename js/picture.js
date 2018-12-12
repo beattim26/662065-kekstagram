@@ -4,6 +4,8 @@ var ENTER_KEYCODE = 13;
 var STEP_VALUE = 25;
 var MAX_VALUE = '100%';
 var MIN_VALUE = '25%';
+var MAX_SYMBOLS = 20;
+var MAX_TAGS = 5;
 var activeFilter;
 var similarListElement = document.querySelector('.pictures');
 var similarPictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
@@ -24,6 +26,8 @@ var effectLevel = uploadPopup.querySelector('.img-upload__effect-level');
 var effectPin = uploadPopup.querySelector('.effect-level__pin');
 var effectValue = uploadPopup.querySelector('.effect-level__value');
 var effectsLabel = uploadPopup.querySelectorAll('.effects__label');
+var hashTag = uploadPopup.querySelector('.text__hashtags');
+var commentField = uploadPopup.querySelector('.text__description');
 var comments = ['Всё отлично!', 'В целом всё неплохо. Но не всё.', 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.', 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.', 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
 var descriptions = ['Тестим новую камеру!', 'Затусили с друзьями на море', 'Как же круто тут кормят', 'Отдыхаем...', 'Цените каждое мгновенье. Цените тех, кто рядом с вами и отгоняйте все сомненья. Не обижайте всех словами......', 'Вот это тачка!'];
 var names = ['Артем', 'Петр', 'Василий', 'Иван', 'Генадий', 'Виктория', 'Елена', 'Мария'];
@@ -267,3 +271,47 @@ effectPin.addEventListener('keydown', function (evt) {
   }
 });
 
+var showTagError = function (hashTags) {
+  for (i = 0; i < hashTags.length; i++) {
+    if (hashTags[i].indexOf('#') !== 0) {
+      return 'Начните ваш хэштег с символа "#"';
+    } else if (hashTags[i].length === 1) {
+      return 'Ваш хэштег не может состоять только из одной решетки';
+    } else if (hashTags[i].length > MAX_SYMBOLS) {
+      return 'Ваш хэштэг превышает максимальную длинну на ' + (hashTags[i].length - MAX_SYMBOLS) + ' символов';
+    } else if (hashTags.length > MAX_TAGS) {
+      return 'Нельзя указывать больше пяти хэштегов';
+    } else if (hashTags[i].indexOf('#', 1) > 0) {
+      return 'Хэштэги должны разделяться пробелом';
+    } else if (hashTags.indexOf(hashTags[i], i + 1) > 0) {
+      return 'Хэштеги не должны повторяться';
+    }
+  }
+  return '';
+};
+
+var setTagValidity = function () {
+  var tagsArray = hashTag.value.toLowerCase().split(' ');
+
+  hashTag.setCustomValidity(showTagError(tagsArray));
+};
+
+hashTag.addEventListener('input', function () {
+  setTagValidity();
+});
+
+hashTag.addEventListener('focus', function () {
+  document.removeEventListener('keydown', onUploadEscPress);
+});
+
+hashTag.addEventListener('blur', function () {
+  document.addEventListener('keydown', onUploadEscPress);
+});
+
+commentField.addEventListener('focus', function () {
+  document.removeEventListener('keydown', onUploadEscPress);
+});
+
+commentField.addEventListener('blur', function () {
+  document.addEventListener('keydown', onUploadEscPress);
+});

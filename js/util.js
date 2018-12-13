@@ -15,18 +15,18 @@
 
   var getRandomMessage = function (n) {
     if (n === 1) {
-      return window.util.getRandomFromArray(comments);
+      return getRandomFromArray(comments);
     }
-    return window.util.getRandomFromArray(comments) + ' ' + window.util.getRandomFromArray(comments);
+    return getRandomFromArray(comments) + ' ' + getRandomFromArray(comments);
   };
 
   var getRandomComments = function (n) {
     var randomComments = [];
     for (var i = 0; i < n; i++) {
       randomComments.push({
-        avatar: 'img/avatar-' + window.util.getRandomNumber(1, 6) + '.svg',
-        message: getRandomMessage(window.util.getRandomNumber(1, 2)),
-        name: window.util.getRandomFromArray(names)
+        avatar: 'img/avatar-' + getRandomNumber(1, 6) + '.svg',
+        message: getRandomMessage(getRandomNumber(1, 2)),
+        name: getRandomFromArray(names)
       });
     }
     return randomComments;

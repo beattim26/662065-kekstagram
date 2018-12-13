@@ -14,14 +14,14 @@
   };
 
   var getRandomMessage = function (n) {
-  if (n === 1) {
-    return window.util.getRandomFromArray(comments);
-  }
-  return window.util.getRandomFromArray(comments) + ' ' + window.util.getRandomFromArray(comments);
+    if (n === 1) {
+      return window.util.getRandomFromArray(comments);
+    }
+    return window.util.getRandomFromArray(comments) + ' ' + window.util.getRandomFromArray(comments);
   };
 
   var getRandomComments = function (n) {
-  var randomComments = [];
+    var randomComments = [];
     for (var i = 0; i < n; i++) {
       randomComments.push({
         avatar: 'img/avatar-' + window.util.getRandomNumber(1, 6) + '.svg',
@@ -38,5 +38,5 @@
     getRandomComments: getRandomComments,
     ESC_KEYCODE: ESC_KEYCODE,
     ENTER_KEYCODE: ENTER_KEYCODE
-  }
+  };
 })();

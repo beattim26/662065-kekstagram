@@ -29,10 +29,7 @@
     return randomData;
   };
 
-  var pictures = getRandomPictures(25);
-
   window.data = {
-    imagesUrls: imagesUrls,
-    pictures: pictures
+    getRandomPictures: getRandomPictures
   };
 })();

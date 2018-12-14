@@ -7,6 +7,11 @@
   var closeButtonPhoto = bigPicture.querySelector('.big-picture__cancel');
   var socialCommentsTemplate = document.getElementById('social-comment').content.querySelector('.social__comment');
   var socialCommentsElement = bigPicture.querySelector('.social__comments');
+  var pictures = window.data.getRandomPictures(25);
+  var KeyCode = {
+    ESC_KEYCODE: window.util.ESC_KEYCODE,
+    ENTER_KEYCODE: window.util.ENTER_KEYCODE
+  };
 
   var renderPicture = function (picture, index) {
     var pictureElement = similarPictureTemplate.cloneNode(true);
@@ -19,8 +24,8 @@
     return pictureElement;
   };
 
-  for (var i = 0; i < window.data.pictures.length; i++) {
-    fragment.appendChild(renderPicture(window.data.pictures[i], i));
+  for (var i = 0; i < pictures.length; i++) {
+    fragment.appendChild(renderPicture(pictures[i], i));
   }
 
   similarListElement.appendChild(fragment);
@@ -38,7 +43,7 @@
   bigPicture.querySelector('.comments-loader').classList.add('visually-hidden');
 
   var onPhotoEscPress = function (evt) {
-    if (evt.keyCode === window.util.ESC_KEYCODE) {
+    if (evt.keyCode === KeyCode.ESC_KEYCODE) {
       closePhoto();
     }
   };
@@ -54,7 +59,7 @@
     document.addEventListener('keydown', onPhotoEscPress);
 
     for (i = 0; i < picture.comments.length; i++) {
-      fragment.appendChild(renderComment(window.data.pictures[target.dataset.picture].comments[i]));
+      fragment.appendChild(renderComment(pictures[target.dataset.picture].comments[i]));
     }
     socialCommentsElement.appendChild(fragment);
   };
@@ -71,14 +76,14 @@
 
   similarListElement.addEventListener('click', function (evt) {
     if (evt.target.className === 'picture__img') {
-      showPhoto(window.data.pictures[event.target.dataset.picture], event.target);
+      showPhoto(pictures[event.target.dataset.picture], event.target);
     }
   });
 
   similarListElement.addEventListener('keydown', function (evt) {
     if (evt.target.className === 'picture') {
-      if (evt.keyCode === window.util.ENTER_KEYCODE) {
-        showPhoto(window.data.pictures[event.target.firstElementChild.dataset.picture], event.target.firstElementChild);
+      if (evt.keyCode === KeyCode.ENTER_KEYCODE) {
+        showPhoto(pictures[event.target.firstElementChild.dataset.picture], event.target.firstElementChild);
       }
     }
   });

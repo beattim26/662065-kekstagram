@@ -24,6 +24,10 @@
     PHOBOS: 'phobos',
     HEAT: 'heat'
   };
+  var KeyCode = {
+    ESC_KEYCODE: window.util.ESC_KEYCODE,
+    ENTER_KEYCODE: window.util.ENTER_KEYCODE
+  };
 
   var changeFilter = function (filterName) {
     var effectsValue = 'effects__preview--' + filterName;
@@ -86,7 +90,7 @@
 
   for (var i = 0; i < effectsLabel.length; i++) {
     effectsLabel[i].addEventListener('keydown', function (evt) {
-      if (evt.keyCode === window.util.ENTER_KEYCODE) {
+      if (evt.keyCode === KeyCode.ENTER_KEYCODE) {
         var eventInput = document.getElementById(event.target.parentNode.htmlFor);
         changeFilter(eventInput.value);
       }
@@ -98,7 +102,7 @@
   });
 
   effectPin.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === window.util.ENTER_KEYCODE) {
+    if (evt.keyCode === KeyCode.ENTER_KEYCODE) {
       applyFilter();
     }
   });
@@ -150,7 +154,7 @@
   });
 
   effectPin.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === window.util.ENTER_KEYCODE) {
+    if (evt.keyCode === KeyCode.ENTER_KEYCODE) {
       applyFilter();
     }
   });

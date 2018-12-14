@@ -7,9 +7,12 @@
   var uploadPopup = document.querySelector('.img-upload__overlay');
   var hashTag = uploadPopup.querySelector('.text__hashtags');
   var commentField = uploadPopup.querySelector('.text__description');
+  var KeyCode = {
+    ESC_KEYCODE: window.util.ESC_KEYCODE,
+  };
 
   var onUploadEscPress = function (evt) {
-    if (evt.keyCode === window.util.ESC_KEYCODE) {
+    if (evt.keyCode === KeyCode.ESC_KEYCODE) {
       closeUploadPopup();
     }
   };
@@ -35,7 +38,9 @@
 
   var showTagError = function (hashTags) {
     for (var i = 0; i < hashTags.length; i++) {
-      if (hashTags[i].indexOf('#') !== 0) {
+      if (hashTags[i].length === 0) {
+        return '';
+      } else if (hashTags[i].indexOf('#') !== 0) {
         return 'Начните ваш хэштег с символа "#"';
       } else if (hashTags[i].length === 1) {
         return 'Ваш хэштег не может состоять только из одной решетки';

@@ -1,5 +1,5 @@
 'use strict';
-(function () {
+(function (util) {
   var STEP_VALUE = 25;
   var MAX_VALUE = '100%';
   var MIN_VALUE = '25%';
@@ -23,10 +23,6 @@
     MARVIN: 'marvin',
     PHOBOS: 'phobos',
     HEAT: 'heat'
-  };
-  var KeyCode = {
-    ESC_KEYCODE: window.util.ESC_KEYCODE,
-    ENTER_KEYCODE: window.util.ENTER_KEYCODE
   };
 
   var changeFilter = function (filterName) {
@@ -90,7 +86,7 @@
 
   for (var i = 0; i < effectsLabel.length; i++) {
     effectsLabel[i].addEventListener('keydown', function (evt) {
-      if (evt.keyCode === KeyCode.ENTER_KEYCODE) {
+      if (evt.keyCode === util.ENTER_KEYCODE) {
         var eventInput = document.getElementById(event.target.parentNode.htmlFor);
         changeFilter(eventInput.value);
       }
@@ -102,7 +98,7 @@
   });
 
   effectPin.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === KeyCode.ENTER_KEYCODE) {
+    if (evt.keyCode === util.ENTER_KEYCODE) {
       applyFilter();
     }
   });
@@ -154,8 +150,8 @@
   });
 
   effectPin.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === KeyCode.ENTER_KEYCODE) {
+    if (evt.keyCode === util.ENTER_KEYCODE) {
       applyFilter();
     }
   });
-})();
+})(window.util);

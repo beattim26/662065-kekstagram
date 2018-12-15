@@ -1,5 +1,5 @@
 'use strict';
-(function () {
+(function (data, util) {
   var similarListElement = document.querySelector('.pictures');
   var similarPictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
   var fragment = document.createDocumentFragment();
@@ -7,11 +7,7 @@
   var closeButtonPhoto = bigPicture.querySelector('.big-picture__cancel');
   var socialCommentsTemplate = document.getElementById('social-comment').content.querySelector('.social__comment');
   var socialCommentsElement = bigPicture.querySelector('.social__comments');
-  var pictures = window.data.getRandomPictures(25);
-  var KeyCode = {
-    ESC_KEYCODE: window.util.ESC_KEYCODE,
-    ENTER_KEYCODE: window.util.ENTER_KEYCODE
-  };
+  var pictures = data.getRandomPictures(25);
 
   var renderPicture = function (picture, index) {
     var pictureElement = similarPictureTemplate.cloneNode(true);
@@ -19,7 +15,7 @@
     pictureElement.querySelector('.picture__img').src = picture.url;
     pictureElement.querySelector('.picture__img').dataset.picture = index;
     pictureElement.querySelector('.picture__likes').textContent = picture.likes;
-    pictureElement.querySelector('.picture__comments').textContent = window.util.getRandomNumber(3, 15);
+    pictureElement.querySelector('.picture__comments').textContent = util.getRandomNumber(3, 15);
 
     return pictureElement;
   };
@@ -43,7 +39,7 @@
   bigPicture.querySelector('.comments-loader').classList.add('visually-hidden');
 
   var onPhotoEscPress = function (evt) {
-    if (evt.keyCode === KeyCode.ESC_KEYCODE) {
+    if (evt.keyCode === util.ESC_KEYCODE) {
       closePhoto();
     }
   };
@@ -82,7 +78,7 @@
 
   similarListElement.addEventListener('keydown', function (evt) {
     if (evt.target.className === 'picture') {
-      if (evt.keyCode === KeyCode.ENTER_KEYCODE) {
+      if (evt.keyCode === util.ENTER_KEYCODE) {
         showPhoto(pictures[event.target.firstElementChild.dataset.picture], event.target.firstElementChild);
       }
     }
@@ -91,4 +87,4 @@
   closeButtonPhoto.addEventListener('click', function () {
     closePhoto();
   });
-})();
+})(window.data, window.util);

@@ -1,5 +1,5 @@
 'use strict';
-(function () {
+(function (util) {
   var MAX_CHARACTERS = 20;
   var MAX_TAGS = 5;
   var uploadButton = document.getElementById('upload-file');
@@ -7,12 +7,9 @@
   var uploadPopup = document.querySelector('.img-upload__overlay');
   var hashTag = uploadPopup.querySelector('.text__hashtags');
   var commentField = uploadPopup.querySelector('.text__description');
-  var KeyCode = {
-    ESC_KEYCODE: window.util.ESC_KEYCODE,
-  };
 
   var onUploadEscPress = function (evt) {
-    if (evt.keyCode === KeyCode.ESC_KEYCODE) {
+    if (evt.keyCode === util.ESC_KEYCODE) {
       closeUploadPopup();
     }
   };
@@ -38,18 +35,18 @@
 
   var showTagError = function (hashTags) {
     for (var i = 0; i < hashTags.length; i++) {
-      if (hashTags[i].length === 0) {
+      if (hashTags[i].length === 0 && hashTags[i].indexOf('#') === 0) {
         return '';
       } else if (hashTags[i].indexOf('#') !== 0) {
         return 'Начните ваш хэштег с символа "#"';
       } else if (hashTags[i].length === 1) {
         return 'Ваш хэштег не может состоять только из одной решетки';
       } else if (hashTags[i].length > MAX_CHARACTERS) {
-        return 'Ваш хэштэг превышает максимальную длинну на ' + (hashTags[i].length - MAX_CHARACTERS) + ' символов';
+        return 'Ваш хэштег превышает максимальную длинну на ' + (hashTags[i].length - MAX_CHARACTERS) + ' символов';
       } else if (hashTags.length > MAX_TAGS) {
         return 'Нельзя указывать больше пяти хэштегов';
       } else if (hashTags[i].indexOf('#', 1) > 0) {
-        return 'Хэштэги должны разделяться пробелом';
+        return 'Хэштеги должны разделяться пробелом';
       } else if (hashTags.indexOf(hashTags[i], i + 1) > 0) {
         return 'Хэштеги не должны повторяться';
       }
@@ -83,4 +80,4 @@
     document.addEventListener('keydown', onUploadEscPress);
   });
 
-})();
+})(window.util);

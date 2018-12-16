@@ -43,8 +43,9 @@
         commentsCount = MAX_COMMENTS_SHOW;
       }
 
-      for (var i = 0; i < commentsCount; i++)
+      for (var i = 0; i < commentsCount; i++) {
         fragment.appendChild(renderComment(pictures[target].comments[i]));
+      }
       socialCommentsElement.appendChild(fragment);
     });
   };
@@ -84,5 +85,5 @@
   window.gallery = {
     similarListElement: similarListElement,
     fragment: fragment
-  }
+  };
 })(window.data, window.util, window.backend);

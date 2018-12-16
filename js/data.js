@@ -13,7 +13,7 @@
     return pictureElement;
   };
 
-  backend.receiveData(function(pictures) {
+  backend.receiveData(function (pictures) {
     for (var i = 0; i < pictures.length; i++) {
       gallery.fragment.appendChild(renderPicture(pictures[i], i));
     }

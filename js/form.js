@@ -36,28 +36,27 @@
   });
 
   var showTagError = function (hashTags, input) {
-    var borderRed = input.style.border = '2px solid red';
     for (var i = 0; i < hashTags.length; i++) {
       if (hashTags[i].length === 0) {
         input.style.border = '';
         return '';
       } else if (hashTags[i].indexOf('#') !== 0) {
-        borderRed;
+        input.style.border = '2px solid red';
         return 'Начните ваш хэштег с символа "#"';
       } else if (hashTags[i].length === 1) {
-        borderRed;
+        input.style.border = '2px solid red';
         return 'Ваш хэштег не может состоять только из одной решетки';
       } else if (hashTags[i].length > MAX_CHARACTERS) {
-        borderRed;
+        input.style.border = '2px solid red';
         return 'Ваш хэштег превышает максимальную длинну на ' + (hashTags[i].length - MAX_CHARACTERS) + ' символов';
       } else if (hashTags.length > MAX_TAGS) {
-        borderRed;
+        input.style.border = '2px solid red';
         return 'Нельзя указывать больше пяти хэштегов';
       } else if (hashTags[i].indexOf('#', 1) > 0) {
-        borderRed;
+        input.style.border = '2px solid red';
         return 'Хэштеги должны разделяться пробелом';
       } else if (hashTags.indexOf(hashTags[i], i + 1) > 0) {
-        borderRed;
+        input.style.border = '2px solid red';
         return 'Хэштеги не должны повторяться';
       }
     }
@@ -106,7 +105,7 @@
         document.body.removeChild(successElement);
       }
 
-    document.removeEventListener('keydown', showSuccess);
+      document.removeEventListener('keydown', showSuccess);
     });
   };
 

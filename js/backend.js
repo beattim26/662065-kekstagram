@@ -1,3 +1,4 @@
+'use strict';
 (function () {
   var URL_SAVE = 'https://js.dump.academy/kekstagram/data';
   var URL_LOAD = 'https://js.dump.academy/kekstagram';
@@ -58,10 +59,10 @@
 
     xhr.open('POST', URL_LOAD);
     xhr.send(data);
-    };
+  };
 
   window.backend = {
     receiveData: receiveData,
     uploadData: uploadData
-  }
+  };
 })();

@@ -126,7 +126,7 @@
       if (positionPin >= 0 && positionPin <= MAX_SHIFT_X) {
         effectPin.style.left = positionPin + 'px';
         effectDepth.style.width = (effectPin.offsetLeft / PERCENT_PIN_POSITION) + '%';
-        effectValue.value = effectPin.offsetLeft / PERCENT_PIN_POSITION;
+        effectValue.value = parseInt(effectPin.offsetLeft / PERCENT_PIN_POSITION);
       }
 
       applyFilter();

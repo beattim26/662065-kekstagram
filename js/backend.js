@@ -1,7 +1,7 @@
 'use strict';
 (function () {
   var URL_SAVE = 'https://js.dump.academy/kekstagram/data';
-  var URL_LOAD = 'https://js.dump.academy/kekstagram';
+  var URL_LOAD = 'https://js.dump.academy/kekstagra';
   var TIMEOUT = 10000;
   var StatusCode = {
     OK: 200,

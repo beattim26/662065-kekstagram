@@ -4,6 +4,9 @@
   var closeButtonUpload = document.getElementById('upload-cancel');
   var uploadPopup = document.querySelector('.img-upload__overlay');
   var form = document.getElementById('upload-select-image');
+  var imagePreview = document.querySelector('.img-upload__preview-photo');
+  var radioEffectNone = document.getElementById('effect-none');
+  var effectLevel = document.querySelector('.img-upload__effect-level');
 
   var onUploadEscPress = function (evt) {
     if (evt.keyCode === util.ESC_KEYCODE) {
@@ -14,13 +17,16 @@
   var openUploadPopup = function () {
     uploadPopup.classList.remove('hidden');
     document.addEventListener('keydown', onUploadEscPress);
+    radioEffectNone.checked = true;
+    effectLevel.classList.add('hidden');
   };
 
   var closeUploadPopup = function () {
     uploadPopup.classList.add('hidden');
     document.removeEventListener('keydown', onUploadEscPress);
     uploadButton.value = '';
-    form.reset();
+    imagePreview.className = '';
+    imagePreview.style = '';
   };
 
   uploadButton.addEventListener('change', function () {
@@ -81,6 +87,8 @@
   });
 
   window.form = {
-    onUploadEscPress: onUploadEscPress
+    onUploadEscPress: onUploadEscPress,
+    imagePreview: imagePreview,
+    effectLevel: effectLevel
   };
 })(window.util);

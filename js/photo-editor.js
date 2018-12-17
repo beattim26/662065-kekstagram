@@ -1,20 +1,18 @@
 'use strict';
-(function (util) {
+(function (util, form) {
   var STEP_VALUE = 25;
   var MAX_VALUE = '100%';
   var MIN_VALUE = '25%';
   var MAX_SHIFT_X = 450;
   var PERCENT_PIN_POSITION = 4.5;
   var activeFilter;
-  var effectLevel = document.querySelector('.img-upload__effect-level');
-  var imagePreview = document.querySelector('.img-upload__preview-photo');
   var scaleValue = document.querySelector('.scale__control--value');
   var scaleSmaller = document.querySelector('.scale__control--smaller');
   var scaleBigger = document.querySelector('.scale__control--bigger');
   var effectsList = document.querySelector('.img-upload__effects');
-  var effectValue = effectLevel.querySelector('.effect-level__value');
-  var effectPin = effectLevel.querySelector('.effect-level__pin');
-  var effectDepth = effectLevel.querySelector('.effect-level__depth');
+  var effectValue = document.querySelector('.effect-level__value');
+  var effectPin = document.querySelector('.effect-level__pin');
+  var effectDepth = document.querySelector('.effect-level__depth');
   var effectsLabel = effectValue.querySelectorAll('.effects__label');
   var Filter = {
     NONE: 'none',
@@ -27,14 +25,14 @@
 
   var changeFilter = function (filterName) {
     var effectsValue = 'effects__preview--' + filterName;
-    effectLevel.classList.remove('hidden');
+    form.effectLevel.classList.remove('hidden');
 
-    imagePreview.className = '';
-    imagePreview.classList.add(effectsValue);
-    imagePreview.style.filter = null;
+    form.imagePreview.className = '';
+    form.imagePreview.classList.add(effectsValue);
+    form.imagePreview.style.filter = null;
 
     if (filterName === Filter.NONE) {
-      effectLevel.classList.add('hidden');
+      form.effectLevel.classList.add('hidden');
       activeFilter = Filter.NONE;
     } else {
       activeFilter = filterName;
@@ -59,7 +57,7 @@
   };
 
   var applyFilter = function () {
-    imagePreview.style.filter = getFilterStyle(activeFilter, effectValue.value);
+    form.imagePreview.style.filter = getFilterStyle(activeFilter, effectValue.value);
   };
 
   scaleBigger.addEventListener('click', function () {
@@ -67,7 +65,7 @@
       var currentValue = parseInt(scaleValue.value, 10);
       scaleValue.value = currentValue + STEP_VALUE + '%';
       currentValue += STEP_VALUE;
-      imagePreview.style.transform = 'scale(' + currentValue / 100 + ')';
+      form.imagePreview.style.transform = 'scale(' + currentValue / 100 + ')';
     }
   });
 
@@ -76,7 +74,7 @@
       var currentValue = parseInt(scaleValue.value, 10);
       scaleValue.value = currentValue - STEP_VALUE + '%';
       currentValue -= STEP_VALUE;
-      imagePreview.style.transform = 'scale(' + currentValue / 100 + ')';
+      form.imagePreview.style.transform = 'scale(' + currentValue / 100 + ')';
     }
   });
 
@@ -154,4 +152,4 @@
       applyFilter();
     }
   });
-})(window.util);
+})(window.util, window.form);

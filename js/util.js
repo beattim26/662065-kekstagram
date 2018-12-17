@@ -11,7 +11,6 @@
     return arr[getRandomNumber(0, arr.length - 1)];
   };
 
-
   window.util = {
     getRandomNumber: getRandomNumber,
     getRandomFromArray: getRandomFromArray,

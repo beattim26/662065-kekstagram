@@ -35,7 +35,7 @@
   };
 
   var setTagValidity = function () {
-    var tagsArray = hashTag.value.toLowerCase().split(' ');
+    var tagsArray = hashTag.value.toLowerCase().split(/[\s]+/);
     hashTag.setCustomValidity(showTagError(tagsArray, hashTag));
   };
 

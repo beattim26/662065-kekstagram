@@ -7,8 +7,8 @@
   var uploadPopup = document.querySelector('.img-upload__overlay');
   var form = document.getElementById('upload-select-image');
   var radioEffectNone = document.getElementById('effect-none');
-  var hashTag = document.querySelector('.text__hashtags');
-  var commentField = document.querySelector('.text__description');
+  var hashTag = uploadPopup.querySelector('.text__hashtags');
+  var commentField = uploadPopup.querySelector('.text__description');
 
   var onUploadEscPress = function (evt) {
     if (evt.keyCode === util.ESC_KEYCODE) {
@@ -28,6 +28,8 @@
     document.removeEventListener('keydown', onUploadEscPress);
     uploadButton.value = '';
     photoEditor.clearFilter();
+    hashTag.value = '';
+    commentField.value = '';
   };
 
   uploadButton.addEventListener('change', function () {

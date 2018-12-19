@@ -116,11 +116,7 @@
 
     hashTag.setCustomValidity(showTagError(tagsArray));
 
-    if (showTagError(tagsArray) !== '') {
-      hashTag.style.border = '2px solid red';
-    } else {
-      hashTag.style.border = '';
-    }
+    hashTag.style.border = showTagError(tagsArray) ? '2px solid red' : '';
   };
 
   hashTag.addEventListener('input', function () {

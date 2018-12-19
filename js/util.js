@@ -15,12 +15,12 @@
 
   var debounce = function (cb, arr) {
     if (lastTimeout) {
-        window.clearTimeout(lastTimeout);
-      }
+      window.clearTimeout(lastTimeout);
+    }
 
-      lastTimeout = window.setTimeout(function () {
-        cb(arr);
-      }, DEBOUNCE_INTERVAL);
+    lastTimeout = window.setTimeout(function () {
+      cb(arr);
+    }, DEBOUNCE_INTERVAL);
   };
 
   window.util = {

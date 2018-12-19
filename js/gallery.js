@@ -23,13 +23,13 @@
     return commentEllement;
   };
 
-  var renderComments = function (arr, commentsCount) {
-     for (var i = 0; i < commentsCount; i++) {
+  var renderComments = function (arr, comments) {
+    for (var i = 0; i < comments; i++) {
       fragment.appendChild(renderComment(arr.comments[i]));
     }
 
     socialCommentsElement.appendChild(fragment);
-  }
+  };
 
   var renderPicture = function (picture, index) {
     var pictureElement = similarPictureTemplate.cloneNode(true);

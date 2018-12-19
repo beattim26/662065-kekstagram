@@ -6,12 +6,12 @@
   var MAX_SHIFT_X = 450;
   var PERCENT_PIN_POSITION = 4.5;
   var activeFilter;
-  var effectLevel = document.querySelector('.img-upload__effect-level');
   var imagePreview = document.querySelector('.img-upload__preview-photo');
   var scaleValue = document.querySelector('.scale__control--value');
   var scaleSmaller = document.querySelector('.scale__control--smaller');
   var scaleBigger = document.querySelector('.scale__control--bigger');
   var effectsList = document.querySelector('.img-upload__effects');
+  var effectLevel = document.querySelector('.img-upload__effect-level');
   var effectValue = effectLevel.querySelector('.effect-level__value');
   var effectPin = effectLevel.querySelector('.effect-level__pin');
   var effectDepth = effectLevel.querySelector('.effect-level__depth');
@@ -39,6 +39,15 @@
     } else {
       activeFilter = filterName;
     }
+  };
+
+  var clearFilter = function () {
+    imagePreview.className = '';
+    imagePreview.style = '';
+  };
+
+  var hideEffectsSlider = function () {
+    effectLevel.classList.add('hidden');
   };
 
   var getFilterStyle = function (name, value) {
@@ -126,7 +135,7 @@
       if (positionPin >= 0 && positionPin <= MAX_SHIFT_X) {
         effectPin.style.left = positionPin + 'px';
         effectDepth.style.width = (effectPin.offsetLeft / PERCENT_PIN_POSITION) + '%';
-        effectValue.value = effectPin.offsetLeft / PERCENT_PIN_POSITION;
+        effectValue.value = parseInt(effectPin.offsetLeft / PERCENT_PIN_POSITION, 10);
       }
 
       applyFilter();
@@ -154,4 +163,9 @@
       applyFilter();
     }
   });
+
+  window.photoEditor = {
+    hideEffectsSlider: hideEffectsSlider,
+    clearFilter: clearFilter
+  };
 })(window.util);

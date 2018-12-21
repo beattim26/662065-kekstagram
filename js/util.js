@@ -13,14 +13,12 @@
     return arr[getRandomNumber(0, arr.length - 1)];
   };
 
-  var debounce = function (cb, arr) {
+  var debounce = function (cb) {
     if (lastTimeout) {
       window.clearTimeout(lastTimeout);
     }
 
-    lastTimeout = window.setTimeout(function () {
-      cb(arr);
-    }, DEBOUNCE_INTERVAL);
+    lastTimeout = window.setTimeout(cb, DEBOUNCE_INTERVAL);
   };
 
   var shufflePictures = function (arr) {

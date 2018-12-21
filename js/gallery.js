@@ -2,6 +2,7 @@
 (function (util, backend) {
   var NEW_PICTURES_COUNT = 10;
   var PREVIEW_COMMENTS_COUNT = 5;
+  var onCommentsLoaderClick;
   var fragment = document.createDocumentFragment();
   var bigPicture = document.querySelector('.big-picture');
   var closeButtonPhoto = bigPicture.querySelector('.big-picture__cancel');
@@ -48,12 +49,10 @@
   };
 
   var updatePicturesPopular = function (pictures) {
-    removePictures();
     addPictures(pictures);
   };
 
   var updatePicturesNew = function (pictures) {
-    removePictures();
     util.shufflePictures(pictures);
 
     for (var i = 0; i < NEW_PICTURES_COUNT; i++) {
@@ -64,25 +63,23 @@
   };
 
   var updatePicturesDiscussed = function (pictures) {
-    removePictures();
     sortPicturesByComments(pictures);
     addPictures(pictures);
   };
 
   var filterPictures = function (evt, pictures) {
     var picturesCopy = pictures.slice();
-    makeButtonInactive();
-    evt.target.classList.add('img-filters__button--active');
+    removePictures();
 
     switch (evt.target.id) {
       case 'filter-popular':
-        util.debounce(updatePicturesPopular, picturesCopy);
+        updatePicturesPopular(picturesCopy);
         break;
       case 'filter-new':
-        util.debounce(updatePicturesNew, picturesCopy);
+        updatePicturesNew(picturesCopy);
         break;
       case 'filter-discussed':
-        util.debounce(updatePicturesDiscussed, picturesCopy);
+        updatePicturesDiscussed(picturesCopy);
         break;
     }
   };
@@ -105,6 +102,7 @@
 
     bigPicture.classList.remove('hidden');
     commentsLoader.classList.remove('hidden');
+    commentsLoader.removeEventListener('click', onCommentsLoaderClick);
 
     bigPicture.querySelector('.big-picture__img').firstElementChild.src = picture.url;
     bigPicture.querySelector('.likes-count').textContent = picture.likes;
@@ -116,11 +114,15 @@
     usersComments = bigPicture.querySelectorAll('.social__comment');
     updateCommentsContent(usersComments.length, commentsAmount);
 
-    commentsLoader.addEventListener('click', function () {
-      renderComments(prepareComments(commentsCopy));
-      usersComments = bigPicture.querySelectorAll('.social__comment');
-      updateCommentsContent(usersComments.length, commentsAmount);
-    });
+    onCommentsLoaderClick = onCommentsClick.bind(null, commentsCopy, commentsAmount);
+
+    commentsLoader.addEventListener('click', onCommentsLoaderClick);
+  };
+
+  var onCommentsClick = function (copy, amount) {
+    renderComments(prepareComments(copy));
+    usersComments = bigPicture.querySelectorAll('.social__comment');
+    updateCommentsContent(usersComments.length, amount);
   };
 
   var renderComment = function (comment) {
@@ -181,7 +183,9 @@
 
     for (var i = 0; i < filterButtons.length; i++) {
       filterButtons[i].addEventListener('click', function (evt) {
-        filterPictures(evt, pictures);
+        makeButtonInactive();
+        evt.target.classList.add('img-filters__button--active');
+        util.debounce(filterPictures.bind(null, evt, pictures));
       });
     }
 
@@ -194,8 +198,10 @@
 
     similarListElement.addEventListener('keydown', function (evt) {
       if (evt.keyCode === util.ENTER_KEYCODE) {
-        var targetPhoto = evt.target.firstElementChild.dataset.picture;
-        showPhoto(pictures[targetPhoto], targetPhoto, pictures);
+        if (evt.target.className === 'picture') {
+          var targetPhoto = evt.target.firstElementChild.dataset.picture;
+          showPhoto(pictures[targetPhoto], targetPhoto, pictures);
+        }
       }
     });
   });

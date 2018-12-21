@@ -15,7 +15,7 @@
   var effectValue = effectLevel.querySelector('.effect-level__value');
   var effectPin = effectLevel.querySelector('.effect-level__pin');
   var effectDepth = effectLevel.querySelector('.effect-level__depth');
-  var effectsLabel = effectValue.querySelectorAll('.effects__label');
+  var effectsLabel = document.querySelectorAll('.effects__label');
   var Filter = {
     NONE: 'none',
     CHROME: 'chrome',
@@ -156,12 +156,6 @@
     changeFilter(evt.target.value);
     effectPin.style.left = MAX_SHIFT_X + 'px';
     effectDepth.style.width = '100%';
-  });
-
-  effectPin.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === util.ENTER_KEYCODE) {
-      applyFilter();
-    }
   });
 
   window.photoEditor = {

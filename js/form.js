@@ -2,11 +2,13 @@
 (function (util, backend, photoEditor) {
   var MAX_CHARACTERS = 20;
   var MAX_TAGS = 5;
-  var uploadButton = document.getElementById('upload-file');
-  var closeButtonUpload = document.getElementById('upload-cancel');
+  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+  var uploadButton = document.querySelector('#upload-file');
+  var imagePreview = document.querySelector('.img-upload__preview-photo');
+  var closeButtonUpload = document.querySelector('#upload-cancel');
   var uploadPopup = document.querySelector('.img-upload__overlay');
-  var form = document.getElementById('upload-select-image');
-  var radioEffectNone = document.getElementById('effect-none');
+  var form = document.querySelector('#upload-select-image');
+  var radioEffectNone = document.querySelector('#effect-none');
   var hashTag = uploadPopup.querySelector('.text__hashtags');
   var commentField = uploadPopup.querySelector('.text__description');
 
@@ -33,7 +35,22 @@
   };
 
   uploadButton.addEventListener('change', function () {
-    openUploadPopup();
+    var file = uploadButton.files[0];
+    var fileName = file.name.toLowerCase();
+    var matches = FILE_TYPES.some(function (it) {
+      return fileName.endsWith(it);
+    });
+
+    if (matches) {
+      var reader = new FileReader();
+
+      reader.addEventListener('load', function () {
+        imagePreview.src = reader.result;
+        openUploadPopup();
+      });
+
+      reader.readAsDataURL(file);
+    }
   });
 
   closeButtonUpload.addEventListener('click', function () {

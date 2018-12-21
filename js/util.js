@@ -23,10 +23,24 @@
     }, DEBOUNCE_INTERVAL);
   };
 
+  var shufflePictures = function (arr) {
+    var j;
+    var temp;
+
+    for (var i = 0; i < arr.length; i++) {
+      j = Math.floor(Math.random() * (i + 1));
+      temp = arr[j];
+      arr[j] = arr[i];
+      arr[i] = temp;
+    }
+    return arr;
+  };
+
   window.util = {
     getRandomNumber: getRandomNumber,
     getRandomFromArray: getRandomFromArray,
     debounce: debounce,
+    shufflePictures: shufflePictures,
     ESC_KEYCODE: ESC_KEYCODE,
     ENTER_KEYCODE: ENTER_KEYCODE
   };

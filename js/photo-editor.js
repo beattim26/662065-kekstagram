@@ -160,6 +160,6 @@
 
   window.photoEditor = {
     hideEffectsSlider: hideEffectsSlider,
-    clearFilter: clearFilter,
+    clearFilter: clearFilter
   };
 })(window.util);

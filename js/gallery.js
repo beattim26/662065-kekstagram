@@ -101,6 +101,7 @@
     var commentsCopy = picturesArray[target].comments.slice();
 
     bigPicture.classList.remove('hidden');
+    document.body.classList.add('modal-open');
     commentsLoader.classList.remove('hidden');
     commentsLoader.removeEventListener('click', onCommentsLoaderClick);
 
@@ -161,6 +162,7 @@
   var closePhoto = function () {
     usersComments = bigPicture.querySelectorAll('.social__comment');
     bigPicture.classList.add('hidden');
+    document.body.classList.remove('modal-open');
     document.removeEventListener('keydown', onPhotoEscPress);
 
     for (var i = 0; i < usersComments.length; i++) {

@@ -15,7 +15,7 @@
   var effectValue = effectLevel.querySelector('.effect-level__value');
   var effectPin = effectLevel.querySelector('.effect-level__pin');
   var effectDepth = effectLevel.querySelector('.effect-level__depth');
-  var effectsLabel = document.querySelectorAll('.effects__label');
+  var effectLabels = document.querySelectorAll('.effects__label');
   var Filter = {
     NONE: 'none',
     CHROME: 'chrome',
@@ -93,10 +93,10 @@
     changeFilter(evt.target.value);
   });
 
-  for (var i = 0; i < effectsLabel.length; i++) {
-    effectsLabel[i].addEventListener('keydown', function (evt) {
+  for (var i = 0; i < effectLabels.length; i++) {
+    effectLabels[i].addEventListener('keydown', function (evt) {
       if (evt.keyCode === util.ENTER_KEYCODE) {
-        var eventInput = document.getElementById(event.target.parentNode.htmlFor);
+        var eventInput = document.getElementById(evt.target.parentNode.htmlFor);
         changeFilter(eventInput.value);
       }
     });

@@ -5,14 +5,6 @@
   var DEBOUNCE_INTERVAL = 500;
   var lastTimeout;
 
-  var getRandomNumber = function (min, max) {
-    return Math.floor(min + Math.random() * (max + 1 - min));
-  };
-
-  var getRandomFromArray = function (arr) {
-    return arr[getRandomNumber(0, arr.length - 1)];
-  };
-
   var debounce = function (cb) {
     if (lastTimeout) {
       window.clearTimeout(lastTimeout);
@@ -35,8 +27,6 @@
   };
 
   window.util = {
-    getRandomNumber: getRandomNumber,
-    getRandomFromArray: getRandomFromArray,
     debounce: debounce,
     shufflePictures: shufflePictures,
     ESC_KEYCODE: ESC_KEYCODE,

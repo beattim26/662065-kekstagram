@@ -15,7 +15,7 @@
   var effectValue = effectLevel.querySelector('.effect-level__value');
   var effectPin = effectLevel.querySelector('.effect-level__pin');
   var effectDepth = effectLevel.querySelector('.effect-level__depth');
-  var effectLabels = document.querySelectorAll('.effects__label');
+  var effectLabels = effectsList.querySelectorAll('.effects__label');
   var Filter = {
     NONE: 'none',
     CHROME: 'chrome',
@@ -44,6 +44,7 @@
   var clearFilter = function () {
     imagePreview.className = '';
     imagePreview.style = '';
+    scaleValue.value = '100%';
   };
 
   var hideEffectsSlider = function () {
@@ -136,6 +137,7 @@
         effectPin.style.left = positionPin + 'px';
         effectDepth.style.width = (effectPin.offsetLeft / PERCENT_PIN_POSITION) + '%';
         effectValue.value = parseInt(effectPin.offsetLeft / PERCENT_PIN_POSITION, 10);
+        effectValue.setAttribute('value', effectValue.value);
       }
 
       applyFilter();
@@ -156,6 +158,8 @@
     changeFilter(evt.target.value);
     effectPin.style.left = MAX_SHIFT_X + 'px';
     effectDepth.style.width = '100%';
+    effectValue.value = parseInt(effectPin.offsetLeft / PERCENT_PIN_POSITION, 10);
+    effectValue.setAttribute('value', effectValue.value);
   });
 
   window.photoEditor = {

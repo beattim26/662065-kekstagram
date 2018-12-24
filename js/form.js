@@ -3,14 +3,15 @@
   var MAX_CHARACTERS = 20;
   var MAX_TAGS = 5;
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
-  var uploadButton = document.querySelector('#upload-file');
-  var imagePreview = document.querySelector('.img-upload__preview-photo');
-  var closeButtonUpload = document.querySelector('#upload-cancel');
-  var uploadPopup = document.querySelector('.img-upload__overlay');
   var form = document.querySelector('#upload-select-image');
-  var radioEffectNone = document.querySelector('#effect-none');
+  var uploadPopup = form.querySelector('.img-upload__overlay');
+  var uploadButton = form.querySelector('#upload-file');
+  var imagePreview = uploadPopup.querySelector('.img-upload__preview-photo');
+  var closeButtonUpload = uploadPopup.querySelector('#upload-cancel');
+  var radioEffectNone = uploadPopup.querySelector('#effect-none');
   var hashTag = uploadPopup.querySelector('.text__hashtags');
   var commentField = uploadPopup.querySelector('.text__description');
+  var effectValue = uploadPopup.querySelector('.effect-level__value');
 
   var onUploadEscPress = function (evt) {
     if (evt.keyCode === util.ESC_KEYCODE) {
@@ -23,6 +24,8 @@
     document.addEventListener('keydown', onUploadEscPress);
     radioEffectNone.checked = true;
     photoEditor.hideEffectsSlider();
+    effectValue.setAttribute('value', 0);
+    setTagValidity();
   };
 
   var closeUploadPopup = function () {
@@ -61,21 +64,23 @@
     var successTemplate = document.querySelector('#success').content.querySelector('.success');
     var successElement = successTemplate.cloneNode(true);
 
-    var removeSucess = function (evt) {
-      if (evt.keyCode === util.ESC_KEYCODE) {
-        document.body.removeChild(successElement);
-        document.removeEventListener('keydown', removeSucess);
-      }
-    };
-
     closeUploadPopup();
     document.body.appendChild(successElement);
 
-    successElement.addEventListener('click', function () {
+    var onClickSucess = function () {
       document.body.removeChild(successElement);
-    });
+      document.removeEventListener('keydown', onEscSucess);
+    };
 
-    document.addEventListener('keydown', removeSucess);
+    var onEscSucess = function (evt) {
+      if (evt.keyCode === util.ESC_KEYCODE) {
+        document.body.removeChild(successElement);
+        document.removeEventListener('keydown', onEscSucess);
+      }
+    };
+
+    successElement.addEventListener('click', onClickSucess);
+    document.addEventListener('keydown', onEscSucess);
   };
 
   var showError = function (onError) {
@@ -87,19 +92,31 @@
     document.body.appendChild(errorElement);
     uploadPopup.classList.add('hidden');
 
-    var errorButtons = document.querySelectorAll('.error__button');
-    var submitButton = errorButtons[0];
-    var closeButton = errorButtons[1];
+    var submitButton = errorElement.querySelector('.error__buttons').firstElementChild;
+
+    var onClickError = function () {
+      document.body.removeChild(errorElement);
+      closeUploadPopup();
+      document.removeEventListener('keydown', onEscError);
+    };
+
+    var onEscError = function (evt) {
+      if (evt.keyCode === util.ESC_KEYCODE) {
+        document.body.removeChild(errorElement);
+        closeUploadPopup();
+        document.removeEventListener('keydown', onEscError);
+      }
+    };
 
     submitButton.addEventListener('click', function () {
       uploadPopup.classList.remove('hidden');
-      document.body.removeChild(document.querySelector('.error'));
+      document.body.removeChild(errorElement);
+      errorElement.removeEventListener('click', onClickError);
+      document.removeEventListener('keydown', onEscError);
     });
 
-    closeButton.addEventListener('click', function () {
-      document.body.removeChild(document.querySelector('.error'));
-      closeUploadPopup();
-    });
+    errorElement.addEventListener('click', onClickError);
+    document.addEventListener('keydown', onEscError);
   };
 
   form.addEventListener('submit', function (evt) {
@@ -109,7 +126,7 @@
 
   var showTagError = function (hashTags) {
     for (var i = 0; i < hashTags.length; i++) {
-      if (hashTags[i].length === 0) {
+      if (hashTags[i].length === 0 && hashTags.length === 1) {
         return '';
       } else if (hashTags[i].indexOf('#') !== 0) {
         return 'Начните ваш хэштег с символа "#"';

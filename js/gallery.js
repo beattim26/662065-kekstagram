@@ -6,10 +6,10 @@
   var fragment = document.createDocumentFragment();
   var bigPicture = document.querySelector('.big-picture');
   var closeButtonPhoto = bigPicture.querySelector('.big-picture__cancel');
-  var socialCommentsTemplate = document.querySelector('#social-comment').content.querySelector('.social__comment');
-  var socialCommentsElement = bigPicture.querySelector('.social__comments');
-  var similarPictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
-  var similarListElement = document.querySelector('.pictures');
+  var similarComments = document.querySelector('#social-comment').content.querySelector('.social__comment');
+  var socialComments = bigPicture.querySelector('.social__comments');
+  var similarPicture = document.querySelector('#picture').content.querySelector('.picture');
+  var pictureList = document.querySelector('.pictures');
   var commentsCount = bigPicture.querySelector('.social__comment-count');
   var usersComments = bigPicture.querySelectorAll('.social__comment');
   var imageFilters = document.querySelector('.img-filters');
@@ -17,7 +17,7 @@
   var commentsLoader = bigPicture.querySelector('.comments-loader');
 
   var renderPicture = function (picture) {
-    var pictureElement = similarPictureTemplate.cloneNode(true);
+    var pictureElement = similarPicture.cloneNode(true);
 
     pictureElement.querySelector('.picture__img').src = picture.url;
     pictureElement.querySelector('.picture__img').dataset.picture = picture.dataset;
@@ -32,7 +32,7 @@
       fragment.appendChild(renderPicture(picturesArr[i], i));
     }
 
-    similarListElement.appendChild(fragment);
+    pictureList.appendChild(fragment);
   };
 
   var sortPicturesByComments = function (arr) {
@@ -42,7 +42,7 @@
   };
 
   var makeButtonInactive = function () {
-    var buttonActive = document.querySelector('.img-filters__button--active');
+    var buttonActive = imageFilters.querySelector('.img-filters__button--active');
     if (buttonActive) {
       buttonActive.classList.remove('img-filters__button--active');
     }
@@ -54,12 +54,7 @@
 
   var updatePicturesNew = function (pictures) {
     util.shufflePictures(pictures);
-
-    for (var i = 0; i < NEW_PICTURES_COUNT; i++) {
-      fragment.appendChild(renderPicture(pictures[i], i));
-    }
-
-    similarListElement.appendChild(fragment);
+    addPictures(pictures.slice(0, NEW_PICTURES_COUNT));
   };
 
   var updatePicturesDiscussed = function (pictures) {
@@ -127,7 +122,7 @@
   };
 
   var renderComment = function (comment) {
-    var commentEllement = socialCommentsTemplate.cloneNode(true);
+    var commentEllement = similarComments.cloneNode(true);
 
     commentEllement.querySelector('.social__picture').src = comment.avatar;
     commentEllement.querySelector('.social__text').textContent = comment.message;
@@ -140,7 +135,7 @@
       fragment.appendChild(renderComment(pictures[i]));
     }
 
-    socialCommentsElement.appendChild(fragment);
+    socialComments.appendChild(fragment);
   };
 
   var updateCommentsContent = function (currentCount, totalCount) {
@@ -165,9 +160,9 @@
     document.body.classList.remove('modal-open');
     document.removeEventListener('keydown', onPhotoEscPress);
 
-    for (var i = 0; i < usersComments.length; i++) {
-      socialCommentsElement.removeChild(usersComments[i]);
-    }
+    usersComments.forEach(function (comment) {
+      socialComments.removeChild(comment);
+    });
   };
 
   backend.receiveData(function (data) {
@@ -183,22 +178,22 @@
       imageFilters.classList.remove('img-filters--inactive');
     }
 
-    for (var i = 0; i < filterButtons.length; i++) {
-      filterButtons[i].addEventListener('click', function (evt) {
+    filterButtons.forEach(function (button) {
+      button.addEventListener('click', function (evt) {
         makeButtonInactive();
         evt.target.classList.add('img-filters__button--active');
         util.debounce(filterPictures.bind(null, evt, pictures));
       });
-    }
+    });
 
-    similarListElement.addEventListener('click', function (evt) {
+    pictureList.addEventListener('click', function (evt) {
       if (evt.target.className === 'picture__img') {
         var targetPhoto = evt.target.dataset.picture;
         showPhoto(pictures[targetPhoto], targetPhoto, pictures);
       }
     });
 
-    similarListElement.addEventListener('keydown', function (evt) {
+    pictureList.addEventListener('keydown', function (evt) {
       if (evt.keyCode === util.ENTER_KEYCODE) {
         if (evt.target.className === 'picture') {
           var targetPhoto = evt.target.firstElementChild.dataset.picture;

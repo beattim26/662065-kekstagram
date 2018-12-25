@@ -145,11 +145,7 @@
 
   var setTagValidity = function () {
     var tagsArray = hashTag.value.toLowerCase().split(/[\s]+/).filter(function (word) {
-      if (word.length > 0) {
-        return true;
-      } else {
-        return false;
-      }
+      return word.length > 0;
     });
 
     hashTag.setCustomValidity(showTagError(tagsArray));

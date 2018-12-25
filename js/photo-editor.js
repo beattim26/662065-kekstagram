@@ -97,7 +97,7 @@
   for (var i = 0; i < effectLabels.length; i++) {
     effectLabels[i].addEventListener('keydown', function (evt) {
       if (evt.keyCode === util.ENTER_KEYCODE) {
-        var eventInput = document.getElementById(evt.target.parentNode.htmlFor);
+        var eventInput = effectsList.querySelector('#' + evt.target.parentNode.htmlFor);
         changeFilter(eventInput.value);
       }
     });

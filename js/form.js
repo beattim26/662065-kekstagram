@@ -62,47 +62,47 @@
 
   var showSuccess = function () {
     var successTemplate = document.querySelector('#success').content.querySelector('.success');
-    var successElement = successTemplate.cloneNode(true);
+    var successItem = successTemplate.cloneNode(true);
 
     closeUploadPopup();
-    document.body.appendChild(successElement);
+    document.body.appendChild(successItem);
 
     var onClickSucess = function () {
-      document.body.removeChild(successElement);
+      document.body.removeChild(successItem);
       document.removeEventListener('keydown', onEscSucess);
     };
 
     var onEscSucess = function (evt) {
       if (evt.keyCode === util.ESC_KEYCODE) {
-        document.body.removeChild(successElement);
+        document.body.removeChild(successItem);
         document.removeEventListener('keydown', onEscSucess);
       }
     };
 
-    successElement.addEventListener('click', onClickSucess);
+    successItem.addEventListener('click', onClickSucess);
     document.addEventListener('keydown', onEscSucess);
   };
 
   var showError = function (onError) {
     var similarErrorTemplate = document.querySelector('#error').content.querySelector('.error');
-    var errorElement = similarErrorTemplate.cloneNode(true);
+    var errorItem = similarErrorTemplate.cloneNode(true);
 
-    errorElement.querySelector('.error__title').textContent = onError;
+    errorItem.querySelector('.error__title').textContent = onError;
 
-    document.body.appendChild(errorElement);
+    document.body.appendChild(errorItem);
     uploadPopup.classList.add('hidden');
 
-    var submitButton = errorElement.querySelector('.error__buttons').firstElementChild;
+    var submitButton = errorItem.querySelector('.error__buttons').firstElementChild;
 
     var onClickError = function () {
-      document.body.removeChild(errorElement);
+      document.body.removeChild(errorItem);
       closeUploadPopup();
       document.removeEventListener('keydown', onEscError);
     };
 
     var onEscError = function (evt) {
       if (evt.keyCode === util.ESC_KEYCODE) {
-        document.body.removeChild(errorElement);
+        document.body.removeChild(errorItem);
         closeUploadPopup();
         document.removeEventListener('keydown', onEscError);
       }
@@ -110,12 +110,12 @@
 
     submitButton.addEventListener('click', function () {
       uploadPopup.classList.remove('hidden');
-      document.body.removeChild(errorElement);
-      errorElement.removeEventListener('click', onClickError);
+      document.body.removeChild(errorItem);
+      errorItem.removeEventListener('click', onClickError);
       document.removeEventListener('keydown', onEscError);
     });
 
-    errorElement.addEventListener('click', onClickError);
+    errorItem.addEventListener('click', onClickError);
     document.addEventListener('keydown', onEscError);
   };
 
@@ -146,10 +146,15 @@
   };
 
   var setTagValidity = function () {
-    var tagsArray = hashTag.value.toLowerCase().split(/[\s]+/);
+    var tagsArray = hashTag.value.toLowerCase().split(/[\s]+/).filter(function (word) {
+      if (word.length > 0) {
+        return true;
+      } else {
+        return false;
+      }
+    });
 
     hashTag.setCustomValidity(showTagError(tagsArray));
-
     hashTag.style.border = showTagError(tagsArray) ? '2px solid red' : '';
   };
 

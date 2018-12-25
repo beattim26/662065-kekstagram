@@ -126,9 +126,7 @@
 
   var showTagError = function (hashTags) {
     for (var i = 0; i < hashTags.length; i++) {
-      if (hashTags[i].length === 0 && hashTags.length === 1) {
-        return '';
-      } else if (hashTags[i].indexOf('#') !== 0) {
+      if (hashTags[i].indexOf('#') !== 0) {
         return 'Начните ваш хэштег с символа "#"';
       } else if (hashTags[i].length === 1) {
         return 'Ваш хэштег не может состоять только из одной решетки';

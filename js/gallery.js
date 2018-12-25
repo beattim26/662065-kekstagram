@@ -1,6 +1,6 @@
 'use strict';
 (function (util, backend) {
-  var PICTURES_COUNT_NEW = 10;
+  var NEW_PICTURES_COUNT = 10;
   var PREVIEW_COMMENTS_COUNT = 5;
   var onCommentsLoaderClick;
   var fragment = document.createDocumentFragment();

@@ -17,14 +17,14 @@
   var commentsLoader = bigPicture.querySelector('.comments-loader');
 
   var renderPicture = function (picture) {
-    var pictureElement = similarPicture.cloneNode(true);
+    var pictureItem = similarPicture.cloneNode(true);
 
-    pictureElement.querySelector('.picture__img').src = picture.url;
-    pictureElement.querySelector('.picture__img').dataset.picture = picture.dataset;
-    pictureElement.querySelector('.picture__likes').textContent = picture.likes;
-    pictureElement.querySelector('.picture__comments').textContent = picture.comments.length;
+    pictureItem.querySelector('.picture__img').src = picture.url;
+    pictureItem.querySelector('.picture__img').dataset.picture = picture.dataset;
+    pictureItem.querySelector('.picture__likes').textContent = picture.likes;
+    pictureItem.querySelector('.picture__comments').textContent = picture.comments.length;
 
-    return pictureElement;
+    return pictureItem;
   };
 
   var addPictures = function (picturesArr) {
@@ -80,7 +80,7 @@
   };
 
   var removePictures = function () {
-    Array.prototype.forEach.call(document.querySelectorAll('.picture'), function (picture) {
+    Array.prototype.forEach.call(pictureList.querySelectorAll('.picture'), function (picture) {
       picture.parentNode.removeChild(picture);
     });
   };
